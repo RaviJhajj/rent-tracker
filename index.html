@@ -9,164 +9,403 @@
 <title>Rent Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
 :root {
-  --bg:#F7F5F0;--surface:#FFFFFF;--surface2:#F0EDE6;--border:#E2DDD4;
-  --text:#1A1714;--text2:#6B6560;--text3:#9E9890;
-  --accent:#2D5016;--accent-light:#EAF0E1;--accent-mid:#4A7A28;
-  --danger:#8B2020;--danger-light:#FAEAEA;
-  --warning:#7A5010;--warning-light:#FDF3E3;
-  --due-soon:#7A5010;--due-soon-bg:#FDF3E3;
-  --due-today:#8B2020;--due-today-bg:#FAEAEA;
-  --overdue:#6B1A1A;--overdue-bg:#F5D5D5;
-  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F7F5F0; --surface:#FFFFFF; --surface2:#F0EDE6; --border:#E2DDD4;
+  --text:#1A1714; --text2:#6B6560; --text3:#9E9890;
+  --accent:#2D5016; --accent-light:#EAF0E1; --accent-mid:#4A7A28;
+  --danger:#8B2020; --danger-light:#FAEAEA;
+  --warning:#7A5010; --warning-light:#FDF3E3;
+  --due-soon:#7A5010; --due-soon-bg:#FDF3E3;
+  --due-today:#8B2020; --due-today-bg:#FAEAEA;
+  --overdue:#6B1A1A; --overdue-bg:#F5D5D5;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;}
-#app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
-#header{background:var(--surface);border-bottom:1px solid var(--border);padding:calc(var(--safe-top) + 14px) 20px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-#header-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);}
-#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bottom) + 72px);}
-#nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:var(--safe-bottom);z-index:100;}
-.nav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.3px;}
+
+/* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+#login-screen{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:fixed; inset:0; background:var(--bg); z-index:300;
+  padding:24px; padding-top:calc(var(--safe-top) + 24px);
+}
+.login-box{
+  width:100%; max-width:360px; display:flex; flex-direction:column; align-items:center;
+  gap:0;
+}
+.login-logo{font-size:52px; margin-bottom:16px; line-height:1;}
+.login-title{
+  font-family:'DM Serif Display',serif; font-size:30px; color:var(--text);
+  margin-bottom:8px; text-align:center;
+}
+.login-sub{
+  font-size:14px; color:var(--text2); text-align:center; line-height:1.6;
+  margin-bottom:32px; max-width:280px;
+}
+.google-btn{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  width:100%; padding:14px 20px;
+  background:#fff; border:1px solid var(--border); border-radius:14px;
+  font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; color:var(--text);
+  cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.06);
+  transition:background 0.15s, box-shadow 0.15s;
+}
+.google-btn:hover{background:#f8f8f8; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.google-btn:active{background:#f0f0f0;}
+.google-logo{width:20px; height:20px; flex-shrink:0;}
+.signin-returning{
+  margin-top:14px; text-align:center;
+  font-size:13px; color:var(--text2);
+}
+.signin-returning strong{color:var(--text);}
+.offline-notice{
+  margin-top:20px; background:var(--warning-light); border:1px solid #e6d5b0;
+  border-radius:12px; padding:12px 16px; font-size:13px; color:var(--warning);
+  text-align:center; width:100%; line-height:1.5;
+}
+.offline-notice button{
+  display:block; width:100%; margin-top:10px;
+  background:var(--warning); color:white; border:none; border-radius:9px;
+  padding:9px; font-size:13px; font-weight:600; font-family:'DM Sans',sans-serif;
+  cursor:pointer;
+}
+.client-id-warning{
+  margin-top:16px; background:#FFF3CD; border:1px solid #FFEAA0;
+  border-radius:12px; padding:12px 16px; font-size:12px; color:#7A6000;
+  text-align:center; width:100%; line-height:1.6;
+}
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+#loading-screen{
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  position:fixed; inset:0; background:var(--bg); z-index:300; gap:18px;
+}
+.spinner{
+  width:36px; height:36px;
+  border:3px solid var(--border);
+  border-top-color:var(--accent-mid);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loading-msg{font-size:15px; color:var(--text2); font-weight:500;}
+
+/* ============================================================
+   MIGRATION OVERLAY
+   ============================================================ */
+#migration-overlay{
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+  z-index:400; align-items:center; justify-content:center; padding:24px;
+}
+.migration-box{
+  background:var(--surface); border-radius:20px; padding:28px 24px;
+  width:100%; max-width:380px; text-align:center;
+}
+.migration-icon{font-size:40px; margin-bottom:14px; line-height:1;}
+.migration-box h2{
+  font-family:'DM Serif Display',serif; font-size:22px; margin-bottom:10px;
+}
+.migration-box p{font-size:14px; color:var(--text2); line-height:1.6; margin-bottom:16px;}
+.migration-preview{
+  background:var(--surface2); border-radius:10px; padding:10px 14px;
+  font-size:13px; color:var(--text); margin-bottom:20px; font-weight:500;
+}
+.migration-actions{display:flex; gap:10px;}
+.migration-skip{
+  flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:12px;
+  padding:13px; font-size:14px; font-weight:500; font-family:'DM Sans',sans-serif;
+  cursor:pointer; color:var(--text);
+}
+.migration-import{
+  flex:2; background:var(--accent); border:none; border-radius:12px;
+  padding:13px; font-size:14px; font-weight:600; font-family:'DM Sans',sans-serif;
+  cursor:pointer; color:white;
+}
+
+/* ============================================================
+   MAIN APP
+   ============================================================ */
+#app{display:none; flex-direction:column; height:100vh; height:100dvh;}
+#header{
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:calc(var(--safe-top) + 14px) 20px 14px;
+  display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+}
+#header-title{font-family:'DM Serif Display',serif; font-size:22px; color:var(--text);}
+#header-right{display:flex; align-items:center; gap:10px;}
+.sync-icon{
+  font-size:15px; cursor:default; user-select:none;
+  width:26px; height:26px; display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+}
+.sync-icon.sync-ok{color:var(--accent-mid);}
+.sync-icon.sync-active{color:var(--accent-mid); animation:spin 1s linear infinite; display:inline-block;}
+.sync-icon.sync-pending{color:var(--text3); animation:spin 1.5s linear infinite; display:inline-block;}
+.sync-icon.sync-error{color:var(--danger);}
+.sync-icon.sync-offline{color:var(--text3);}
+#user-avatar-btn{
+  width:32px; height:32px; border-radius:50%;
+  background:var(--accent-light); color:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; cursor:pointer;
+  border:1.5px solid var(--accent-light);
+  flex-shrink:0; user-select:none;
+}
+#content{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:calc(var(--safe-bottom) + 72px);}
+#nav{
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--surface); border-top:1px solid var(--border);
+  display:flex; padding-bottom:var(--safe-bottom); z-index:100;
+}
+.nav-btn{
+  flex:1; padding:10px 4px 8px; display:flex; flex-direction:column;
+  align-items:center; gap:3px; background:none; border:none; cursor:pointer;
+  color:var(--text2); font-family:'DM Sans',sans-serif; font-size:10px;
+  font-weight:500; letter-spacing:0.3px;
+}
 .nav-btn.active{color:var(--accent-mid);}
-.nav-icon{font-size:20px;line-height:1;}
-.screen{display:none;}.screen.active{display:block;}
+.nav-icon{font-size:20px; line-height:1;}
+.screen{display:none;} .screen.active{display:block;}
 
 /* Month nav */
-.month-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0;}
-.month-nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--text);line-height:1;}
-#month-display{font-size:17px;font-weight:600;color:var(--text);}
+.month-nav{display:flex; align-items:center; justify-content:space-between; padding:16px 20px 0;}
+.month-nav-btn{
+  width:36px; height:36px; border-radius:50%; border:1px solid var(--border);
+  background:var(--surface); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:20px; color:var(--text); line-height:1;
+}
+#month-display{font-size:17px; font-weight:600; color:var(--text);}
 
 /* Metrics */
-.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px 20px;}
-.metric{background:var(--surface);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid var(--border);}
-.metric-val{font-size:20px;font-weight:600;}
-.metric-lbl{font-size:10px;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px;}
+.metrics{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:14px 20px;}
+.metric{background:var(--surface); border-radius:14px; padding:14px 10px; text-align:center; border:1px solid var(--border);}
+.metric-val{font-size:20px; font-weight:600;}
+.metric-lbl{font-size:10px; color:var(--text2); margin-top:3px; text-transform:uppercase; letter-spacing:0.5px;}
 .metric.green .metric-val{color:var(--accent-mid);}
 .metric.red .metric-val{color:var(--danger);}
-
 .section{padding:0 20px 16px;}
-.section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px;padding-top:4px;}
-.property-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.6px;padding:0 0 6px;}
-.grouped-cards{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
-.tenant-row{display:flex;align-items:center;padding:13px 16px;gap:12px;cursor:pointer;border-bottom:1px solid var(--border);}
+.section-title{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:10px; padding-top:4px;}
+.property-label{font-size:11px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.6px; padding:0 0 6px;}
+.grouped-cards{background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:hidden;}
+.tenant-row{display:flex; align-items:center; padding:13px 16px; gap:12px; cursor:pointer; border-bottom:1px solid var(--border);}
 .tenant-row:last-child{border-bottom:none;}
-.tenant-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
-.tenant-info{flex:1;min-width:0;}
-.tenant-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tenant-unit{font-size:12px;color:var(--text2);}
-.badges{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
-.status-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap;}
-.badge-paid{background:var(--accent-light);color:var(--accent);}
-.badge-partial{background:var(--warning-light);color:var(--warning);}
-.badge-owed{background:var(--danger-light);color:var(--danger);}
-/* Due date indicator badges */
-.due-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
-.due-soon-badge{background:var(--due-soon-bg);color:var(--due-soon);}
-.due-today-badge{background:var(--due-today-bg);color:var(--due-today);}
-.due-overdue-badge{background:var(--overdue-bg);color:var(--overdue);}
+.tenant-avatar{width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:14px; flex-shrink:0;}
+.tenant-info{flex:1; min-width:0;}
+.tenant-name{font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.tenant-unit{font-size:12px; color:var(--text2);}
+.badges{display:flex; align-items:center; gap:5px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end;}
+.status-badge{font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; white-space:nowrap;}
+.badge-paid{background:var(--accent-light); color:var(--accent);}
+.badge-partial{background:var(--warning-light); color:var(--warning);}
+.badge-owed{background:var(--danger-light); color:var(--danger);}
+.due-badge{font-size:11px; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap;}
+.due-soon-badge{background:var(--due-soon-bg); color:var(--due-soon);}
+.due-today-badge{background:var(--due-today-bg); color:var(--due-today);}
+.due-overdue-badge{background:var(--overdue-bg); color:var(--overdue);}
 
 /* Detail overlay */
-#detail-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bottom) + 20px);}
-#detail-header{background:var(--surface);border-bottom:1px solid var(--border);padding:calc(var(--safe-top) + 14px) 20px 14px;display:flex;align-items:center;gap:12px;}
-#detail-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:var(--text);flex-shrink:0;}
-#detail-name{font-size:18px;font-weight:600;}
-#detail-meta{font-size:12px;color:var(--text2);margin-top:1px;}
+#detail-screen{
+  display:none; position:fixed; inset:0; background:var(--bg); z-index:50;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding-bottom:calc(var(--safe-bottom) + 20px);
+}
+#detail-header{
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:calc(var(--safe-top) + 14px) 20px 14px;
+  display:flex; align-items:center; gap:12px;
+}
+#detail-back{
+  width:36px; height:36px; border-radius:50%; border:1px solid var(--border);
+  background:none; display:flex; align-items:center; justify-content:center;
+  font-size:20px; cursor:pointer; color:var(--text); flex-shrink:0;
+}
+#detail-name{font-size:18px; font-weight:600;}
+#detail-meta{font-size:12px; color:var(--text2); margin-top:1px;}
 .detail-section{padding:16px 20px;}
-.detail-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
-.detail-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);}
+.detail-card{background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:hidden; margin-bottom:12px;}
+.detail-row{display:flex; justify-content:space-between; align-items:center; padding:13px 16px; border-bottom:1px solid var(--border);}
 .detail-row:last-child{border-bottom:none;}
-.detail-row-label{font-size:14px;color:var(--text2);}
-.detail-row-val{font-size:14px;font-weight:500;}
-.action-btn{width:100%;background:var(--accent);color:white;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
-
-/* Payment items */
-.payment-item{padding:12px 16px;border-bottom:1px solid var(--border);}
+.detail-row-label{font-size:14px; color:var(--text2);}
+.detail-row-val{font-size:14px; font-weight:500;}
+.action-btn{width:100%; background:var(--accent); color:white; border:none; border-radius:14px; padding:15px; font-size:16px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer;}
+.payment-item{padding:12px 16px; border-bottom:1px solid var(--border);}
 .payment-item:last-child{border-bottom:none;}
-.payment-item-main{display:flex;justify-content:space-between;align-items:center;}
-.payment-item-date{font-size:13px;font-weight:500;}
-.payment-item-note{font-size:12px;color:var(--text2);margin-top:2px;}
-.payment-item-amount{font-size:15px;font-weight:600;color:var(--accent-mid);}
-.del-tap{background:none;border:none;font-size:15px;cursor:pointer;color:var(--text3);padding:4px 6px;}
-.payment-item-actions{display:none;margin-top:10px;gap:8px;}
+.payment-item-main{display:flex; justify-content:space-between; align-items:center;}
+.payment-item-date{font-size:13px; font-weight:500;}
+.payment-item-note{font-size:12px; color:var(--text2); margin-top:2px;}
+.payment-item-amount{font-size:15px; font-weight:600; color:var(--accent-mid);}
+.del-tap{background:none; border:none; font-size:15px; cursor:pointer; color:var(--text3); padding:4px 6px;}
+.payment-item-actions{display:none; margin-top:10px; gap:8px;}
 .payment-item-actions.open{display:flex;}
-.pay-del-cancel{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);}
-.pay-del-confirm{flex:1;background:var(--danger);border:none;border-radius:10px;padding:9px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;}
+.pay-del-cancel{flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:9px; font-size:13px; font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--text);}
+.pay-del-confirm{flex:1; background:var(--danger); border:none; border-radius:10px; padding:9px; font-size:13px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; color:white;}
 
 /* Log form */
 .form-section{padding:16px 20px;}
-.form-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
-.form-field{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+.form-card{background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:hidden; margin-bottom:12px;}
+.form-field{padding:12px 16px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:4px;}
 .form-field:last-child{border-bottom:none;}
-.form-field label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;}
-.form-field input,.form-field select{font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text);background:none;border:none;outline:none;width:100%;padding:2px 0;}
+.form-field label{font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.4px;}
+.form-field input,.form-field select{font-family:'DM Sans',sans-serif; font-size:16px; color:var(--text); background:none; border:none; outline:none; width:100%; padding:2px 0;}
 .form-field select{-webkit-appearance:none;}
-.submit-btn{width:100%;background:var(--accent);color:white;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
-
-/* Month stepper */
-.month-stepper{display:flex;align-items:center;gap:10px;padding:6px 0 2px;}
-.ms-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--text);flex-shrink:0;line-height:1;}
-.ms-display{font-size:16px;font-weight:500;color:var(--text);flex:1;}
+.submit-btn{width:100%; background:var(--accent); color:white; border:none; border-radius:14px; padding:16px; font-size:16px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer;}
+.month-stepper{display:flex; align-items:center; gap:10px; padding:6px 0 2px;}
+.ms-btn{
+  width:32px; height:32px; border-radius:50%; border:1px solid var(--border);
+  background:var(--surface2); display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer; color:var(--text); flex-shrink:0; line-height:1;
+}
+.ms-display{font-size:16px; font-weight:500; color:var(--text); flex:1;}
 
 /* Tenants screen */
 .add-btn-row{padding:14px 20px 0;}
-.add-btn{width:100%;background:var(--surface);border:1px dashed var(--border);border-radius:14px;padding:14px;font-size:15px;color:var(--accent-mid);font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
-.list-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
-.list-row{display:flex;align-items:flex-start;padding:13px 16px;gap:12px;border-bottom:1px solid var(--border);}
+.add-btn{
+  width:100%; background:var(--surface); border:1px dashed var(--border);
+  border-radius:14px; padding:14px; font-size:15px; color:var(--accent-mid);
+  font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.list-card{background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:hidden;}
+.list-row{display:flex; align-items:flex-start; padding:13px 16px; gap:12px; border-bottom:1px solid var(--border);}
 .list-row:last-child{border-bottom:none;}
-.list-info{flex:1;min-width:0;}
-.list-name{font-size:15px;font-weight:500;}
-.list-sub{font-size:12px;color:var(--text2);margin-top:2px;}
-.row-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
-.row-action-btns{display:flex;gap:6px;}
-.row-edit-btn{background:var(--accent-light);border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--accent);}
-.row-del-btn{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text3);padding:0 2px;line-height:1.4;}
-.row-del-confirm{display:none;flex-direction:column;gap:5px;align-items:flex-end;}
+.list-info{flex:1; min-width:0;}
+.list-name{font-size:15px; font-weight:500;}
+.list-sub{font-size:12px; color:var(--text2); margin-top:2px;}
+.row-actions{display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;}
+.row-action-btns{display:flex; gap:6px;}
+.row-edit-btn{background:var(--accent-light); border:none; border-radius:8px; padding:5px 10px; font-size:12px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--accent);}
+.row-del-btn{background:none; border:none; font-size:18px; cursor:pointer; color:var(--text3); padding:0 2px; line-height:1.4;}
+.row-del-confirm{display:none; flex-direction:column; gap:5px; align-items:flex-end;}
 .row-del-confirm.open{display:flex;}
-.rdc-cancel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);white-space:nowrap;}
-.rdc-ok{background:var(--danger);border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;white-space:nowrap;}
+.rdc-cancel{background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:5px 10px; font-size:12px; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--text); white-space:nowrap;}
+.rdc-ok{background:var(--danger); border:none; border-radius:8px; padding:5px 10px; font-size:12px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; color:white; white-space:nowrap;}
 
 /* Modal */
-#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-end;}
+#modal-overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; align-items:flex-end;}
 #modal-overlay.open{display:flex;}
-#modal{background:var(--surface);border-radius:24px 24px 0 0;padding:20px 20px calc(var(--safe-bottom) + 20px);width:100%;max-height:90vh;overflow-y:auto;}
-#modal h2{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:16px;}
+#modal{background:var(--surface); border-radius:24px 24px 0 0; padding:20px 20px calc(var(--safe-bottom) + 20px); width:100%; max-height:90vh; overflow-y:auto;}
+#modal h2{font-family:'DM Serif Display',serif; font-size:22px; margin-bottom:16px;}
 .modal-field{margin-bottom:14px;}
-.modal-field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:var(--text2);margin-bottom:6px;}
-.modal-field input,.modal-field select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:16px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;-webkit-appearance:none;}
-.modal-actions{display:flex;gap:10px;margin-top:18px;}
-.modal-cancel{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);}
-.modal-save{flex:2;background:var(--accent);border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;}
+.modal-field label{display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; color:var(--text2); margin-bottom:6px;}
+.modal-field input,.modal-field select{width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; font-size:16px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none; -webkit-appearance:none;}
+.modal-actions{display:flex; gap:10px; margin-top:18px;}
+.modal-cancel{flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px; font-size:15px; font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--text);}
+.modal-save{flex:2; background:var(--accent); border:none; border-radius:12px; padding:14px; font-size:15px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; color:white;}
 
 /* Data screen */
-.data-action{display:flex;align-items:center;padding:16px;gap:14px;cursor:pointer;border-bottom:1px solid var(--border);}
+.data-action{display:flex; align-items:center; padding:16px; gap:14px; cursor:pointer; border-bottom:1px solid var(--border);}
 .data-action:last-child{border-bottom:none;}
-.data-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.data-info strong{font-size:15px;display:block;}
-.data-info span{font-size:12px;color:var(--text2);}
-.arrow{color:var(--text3);font-size:20px;}
-.inline-confirm{display:none;padding:14px 16px;background:var(--danger-light);border-top:1px solid var(--border);}
+.data-icon{width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;}
+.data-info strong{font-size:15px; display:block;}
+.data-info span{font-size:12px; color:var(--text2);}
+.arrow{color:var(--text3); font-size:20px;}
+.inline-confirm{display:none; padding:14px 16px; background:var(--danger-light); border-top:1px solid var(--border);}
 .inline-confirm.open{display:block;}
-.inline-confirm p{font-size:13px;color:var(--danger);margin-bottom:10px;font-weight:500;}
-.inline-confirm-btns{display:flex;gap:8px;}
-.ic-cancel{flex:1;background:white;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);}
-.ic-ok{flex:1;background:var(--danger);border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;}
+.inline-confirm p{font-size:13px; color:var(--danger); margin-bottom:10px; font-weight:500;}
+.inline-confirm-btns{display:flex; gap:8px;}
+.ic-cancel{flex:1; background:white; border:1px solid var(--border); border-radius:10px; padding:10px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--text);}
+.ic-ok{flex:1; background:var(--danger); border:none; border-radius:10px; padding:10px; font-size:13px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; color:white;}
+.empty-state{text-align:center; padding:40px 20px; color:var(--text2);}
+.empty-icon{font-size:40px; margin-bottom:12px;}
+.empty-title{font-size:17px; font-weight:500; color:var(--text); margin-bottom:6px;}
+.empty-sub{font-size:14px; line-height:1.5;}
 
-.empty-state{text-align:center;padding:40px 20px;color:var(--text2);}
-.empty-icon{font-size:40px;margin-bottom:12px;}
-.empty-title{font-size:17px;font-weight:500;color:var(--text);margin-bottom:6px;}
-.empty-sub{font-size:14px;line-height:1.5;}
-
-#toast{position:fixed;bottom:calc(var(--safe-bottom) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1A1714;color:white;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:500;opacity:0;transition:all 0.25s;z-index:999;white-space:nowrap;pointer-events:none;}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Toast */
+#toast{
+  position:fixed; bottom:calc(var(--safe-bottom) + 80px); left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#1A1714; color:white; padding:10px 20px; border-radius:20px;
+  font-size:14px; font-weight:500; opacity:0; transition:all 0.25s;
+  z-index:999; white-space:nowrap; pointer-events:none;
+}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
+
+<!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🏘️</div>
+    <h1 class="login-title">Rent Tracker</h1>
+    <p class="login-sub">Your data is stored privately in your own Google Sheet — never shared with anyone.</p>
+
+    <button class="google-btn" onclick="signIn()">
+      <!-- Google "G" logo SVG -->
+      <svg class="google-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Sign in with Google
+    </button>
+
+    <div id="signin-returning" style="display:none;" class="signin-returning">
+      Signing in as <strong id="signin-email-hint"></strong>
+    </div>
+
+    <div id="offline-banner" class="offline-notice" style="display:none;">
+      📴 You're offline — Google Sign-In requires a connection.
+      <button onclick="useOfflineMode()">Use cached data instead</button>
+    </div>
+
+    <div id="client-id-warning" class="client-id-warning" style="display:none;">
+      ⚠️ <strong>Developer setup needed:</strong> Open this file and replace<br>
+      <code style="background:#FFF;padding:2px 6px;border-radius:4px;">YOUR_GOOGLE_CLIENT_ID_HERE</code><br>
+      with your actual Google OAuth Client ID.
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LOADING SCREEN
+     ============================================================ -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div id="loading-msg">Loading…</div>
+</div>
+
+<!-- ============================================================
+     MIGRATION OVERLAY
+     ============================================================ -->
+<div id="migration-overlay">
+  <div class="migration-box">
+    <div class="migration-icon">📦</div>
+    <h2>Existing data found</h2>
+    <p>We found rent data saved locally from a previous version of this app. Migrate it to your Google Sheet?</p>
+    <div class="migration-preview" id="migration-preview">Loading…</div>
+    <div class="migration-actions">
+      <button class="migration-skip" onclick="skipMigration()">Start fresh</button>
+      <button class="migration-import" onclick="doMigration()">Yes, migrate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN APP
+     ============================================================ -->
 <div id="app">
-  <div id="header"><div id="header-title">Rent Tracker</div></div>
+  <div id="header">
+    <div id="header-title">Rent Tracker</div>
+    <div id="header-right">
+      <div id="sync-indicator" class="sync-icon" title=""></div>
+      <div id="user-avatar-btn" onclick="showScreen('data')" title="Account"></div>
+    </div>
+  </div>
+
   <div id="content">
 
-    <!-- Summary -->
+    <!-- SUMMARY -->
     <div class="screen active" id="screen-summary">
       <div class="month-nav">
         <button class="month-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
@@ -184,7 +423,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
       </div>
     </div>
 
-    <!-- Log Payment -->
+    <!-- LOG PAYMENT -->
     <div class="screen" id="screen-log">
       <div class="form-section">
         <div class="form-card">
@@ -210,27 +449,56 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
           </div>
           <div class="form-field">
             <label>Note (optional)</label>
-            <input type="text" id="log-note" placeholder="e.g. e-transfer, cash, late fee...">
+            <input type="text" id="log-note" placeholder="e.g. e-transfer, cash, late fee…">
           </div>
         </div>
         <button class="submit-btn" onclick="savePayment()">Record Payment</button>
       </div>
     </div>
 
-    <!-- Tenants & Properties -->
+    <!-- TENANTS & PROPERTIES -->
     <div class="screen" id="screen-tenants">
       <div class="add-btn-row" style="padding-top:16px;">
         <button class="add-btn" onclick="openModal('property',null)">＋ Add Property</button>
       </div>
       <div class="form-section" style="padding-top:12px;" id="tenants-list"></div>
-      <div class="add-btn-row" style="padding-top:0;padding-bottom:16px;">
+      <div class="add-btn-row" style="padding-top:0; padding-bottom:16px;">
         <button class="add-btn" onclick="openModal('tenant',null)">＋ Add Tenant</button>
       </div>
     </div>
 
-    <!-- Data -->
+    <!-- DATA / ACCOUNT -->
     <div class="screen" id="screen-data">
       <div class="form-section">
+
+        <!-- Account Section -->
+        <div class="section-title">Account</div>
+        <div class="list-card" style="margin-bottom:16px;">
+          <div class="data-action" style="cursor:default;">
+            <div id="data-user-avatar" class="data-icon" style="background:var(--accent-light); color:var(--accent); font-size:16px; font-weight:700;"></div>
+            <div class="data-info">
+              <strong id="data-user-name">Loading…</strong>
+              <span id="data-user-email"></span>
+            </div>
+          </div>
+          <div class="data-action" onclick="openSheetsLink()">
+            <div class="data-icon" style="background:#E8F5E9;">📊</div>
+            <div class="data-info"><strong>View in Google Sheets</strong><span>Open your data spreadsheet</span></div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="data-action" onclick="manualSync()">
+            <div class="data-icon" style="background:#E3F2FD; font-size:18px;">↻</div>
+            <div class="data-info"><strong>Sync now</strong><span id="last-sync-text">Tap to sync to Google Sheets</span></div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="data-action" onclick="confirmSignOut()">
+            <div class="data-icon" style="background:#FEE2E2;">🚪</div>
+            <div class="data-info"><strong>Sign out</strong><span>You'll need to sign in again to sync</span></div>
+            <div class="arrow">›</div>
+          </div>
+        </div>
+
+        <!-- Backup & Restore -->
         <div class="section-title">Backup &amp; restore</div>
         <div class="list-card" style="margin-bottom:16px;">
           <div class="data-action" onclick="exportData()">
@@ -245,13 +513,17 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
           </div>
         </div>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+
+        <!-- Install as iPhone App -->
         <div class="section-title">Install as iPhone app</div>
         <div class="list-card" style="margin-bottom:16px;">
-          <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#FDF3E3;">📋</div><div class="data-info"><strong>Step 1</strong><span>Open this file in Safari on iPhone</span></div></div>
+          <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#FDF3E3;">📋</div><div class="data-info"><strong>Step 1</strong><span>Open this page in Safari on iPhone</span></div></div>
           <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#FDF3E3;">⬆️</div><div class="data-info"><strong>Step 2</strong><span>Tap the Share button (box with arrow)</span></div></div>
           <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#FDF3E3;">➕</div><div class="data-info"><strong>Step 3</strong><span>Tap "Add to Home Screen" then Add</span></div></div>
           <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#EAF0E1;">✅</div><div class="data-info"><strong>Done!</strong><span>Rent Tracker appears as an app icon</span></div></div>
         </div>
+
+        <!-- Danger Zone -->
         <div class="section-title">Danger zone</div>
         <div class="list-card">
           <div class="data-action" onclick="toggleClearConfirm()">
@@ -260,36 +532,41 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
             <div class="arrow">›</div>
           </div>
           <div class="inline-confirm" id="clear-confirm">
-            <p>This will delete all tenants, properties and payments. Cannot be undone.</p>
+            <p>This will delete all tenants, properties and payments from both this device and your Google Sheet. Cannot be undone.</p>
             <div class="inline-confirm-btns">
               <button class="ic-cancel" onclick="toggleClearConfirm()">Cancel</button>
               <button class="ic-ok" onclick="clearAllData()">Yes, delete all</button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
-  </div>
+  </div><!-- /content -->
+
   <nav id="nav">
     <button class="nav-btn active" data-screen="summary" onclick="showScreen('summary')"><span class="nav-icon">🏠</span>Summary</button>
     <button class="nav-btn" data-screen="log" onclick="showScreen('log')"><span class="nav-icon">＋</span>Log</button>
     <button class="nav-btn" data-screen="tenants" onclick="showScreen('tenants')"><span class="nav-icon">👥</span>Tenants</button>
     <button class="nav-btn" data-screen="data" onclick="showScreen('data')"><span class="nav-icon">⚙️</span>Data</button>
   </nav>
-</div>
+</div><!-- /app -->
 
-<!-- Detail overlay -->
+<!-- DETAIL OVERLAY -->
 <div id="detail-screen">
   <div id="detail-header">
     <button id="detail-back" onclick="closeDetail()">‹</button>
     <div id="detail-avatar" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;"></div>
-    <div><div id="detail-name" style="font-size:18px;font-weight:600;"></div><div id="detail-meta" style="font-size:12px;color:var(--text2);margin-top:1px;"></div></div>
+    <div>
+      <div id="detail-name" style="font-size:18px;font-weight:600;"></div>
+      <div id="detail-meta" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
+    </div>
   </div>
   <div id="detail-body"></div>
 </div>
 
-<!-- Modal -->
+<!-- MODAL -->
 <div id="modal-overlay" onclick="closeModalOutside(event)">
   <div id="modal">
     <h2 id="modal-title"></h2>
@@ -303,123 +580,753 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 
 <div id="toast"></div>
 
+<!-- ============================================================
+     GOOGLE IDENTITY SERVICES — loaded async; calls initGoogleAuth()
+     ============================================================ -->
+<script
+  src="https://accounts.google.com/gsi/client"
+  async
+  onload="initGoogleAuth()"
+  onerror="handleGsiLoadError()">
+</script>
+
 <script>
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const COLORS=['#3D6B1A','#1A5A6B','#6B3D1A','#3D1A6B','#1A6B3D','#6B1A5A','#4A3D1A','#1A4A6B'];
+'use strict';
 
-let state={tenants:[],properties:[],payments:[]};
-const today=new Date();
-let currentMonth=new Date(today.getFullYear(),today.getMonth(),1); // #5 always opens on current month
-let logMonth=new Date(today.getFullYear(),today.getMonth(),1);     // #4 log defaults to current month
-let modalMode=null,modalEditId=null,detailTenantId=null;
+// ============================================================
+// CONFIGURATION — PASTE YOUR OAUTH CLIENT ID HERE
+// ============================================================
+const GOOGLE_CLIENT_ID = '112975075760-rlola82ikfdu0ur2vto1pqucins3ekvf.apps.googleusercontent.com';
 
-function getKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
-function monthStr(d){return MONTHS[d.getMonth()]+' '+d.getFullYear();}
-function fmt(n){return '$'+Math.round(Math.abs(n)).toLocaleString('en-CA');}
-function fmtD(n){return '$'+Math.abs(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
-function colorFor(id){const i=state.tenants.findIndex(t=>t.id===id);return COLORS[Math.max(i,0)%COLORS.length];}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function todayStr(){return today.toISOString().split('T')[0];}
+// ============================================================
+// STORAGE KEYS
+// ============================================================
+const SK_SHEET_ID   = 'renttracker_spreadsheet_id';
+const SK_USER_EMAIL = 'renttracker_user_email';
+const SK_USER_NAME  = 'renttracker_user_name';
+const SK_CACHE      = 'renttracker_cache';
+const SK_MIGRATED   = 'renttracker_migrated_v3';
+const SK_LAST_SYNC  = 'renttracker_last_sync';
+const LEGACY_KEY    = 'renttracker_v3';
 
-function load(){try{const s=localStorage.getItem('renttracker_v3');if(s)state=JSON.parse(s);}catch(e){}}
-function save(){try{localStorage.setItem('renttracker_v3',JSON.stringify(state));}catch(e){}}
+// ============================================================
+// CONSTANTS
+// ============================================================
+const MONTHS  = ['January','February','March','April','May','June',
+                 'July','August','September','October','November','December'];
+const COLORS  = ['#3D6B1A','#1A5A6B','#6B3D1A','#3D1A6B','#1A6B3D','#6B1A5A','#4A3D1A','#1A4A6B'];
+const SHEETS_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
 
+// ============================================================
+// AUTH & SYNC STATE
+// ============================================================
+let accessToken       = null;      // Never persisted to localStorage
+let tokenExpiresAt    = 0;
+let tokenClient       = null;
+let spreadsheetId     = localStorage.getItem(SK_SHEET_ID) || null;
+let userEmail         = localStorage.getItem(SK_USER_EMAIL) || '';
+let userName          = localStorage.getItem(SK_USER_NAME)  || '';
+let isOnline          = navigator.onLine;
+let isSyncing         = false;
+let hasPendingSync    = false;
+let syncDebounceTimer = null;
+let pendingMigrationData = null;
+let offlineMode       = false; // True when using cached data without auth
+
+// ============================================================
+// APP STATE
+// ============================================================
+let state = { tenants:[], properties:[], payments:[] };
+const today    = new Date();
+let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+let logMonth     = new Date(today.getFullYear(), today.getMonth(), 1);
+let modalMode = null, modalEditId = null, detailTenantId = null;
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function getKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function monthStr(d){ return MONTHS[d.getMonth()]+' '+d.getFullYear(); }
+function fmt(n){ return '$'+Math.round(Math.abs(n)).toLocaleString('en-CA'); }
+function fmtD(n){ return '$'+Math.abs(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function initials(n){ return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?'; }
+function colorFor(id){ const i=state.tenants.findIndex(t=>t.id===id); return COLORS[Math.max(i,0)%COLORS.length]; }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function todayStr(){ return today.toISOString().split('T')[0]; }
+
+// ============================================================
+// TOAST
+// ============================================================
 function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2200);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2400);
 }
 
-// Due date helpers
-function lastDayOfMonth(year,month){return new Date(year,month+1,0).getDate();}
+// ============================================================
+// OFFLINE / ONLINE LISTENERS
+// ============================================================
+window.addEventListener('online', ()=>{
+  isOnline = true;
+  updateOfflineBanner();
+  updateSyncIndicator();
+  if (accessToken && !offlineMode) syncToSheets();
+});
+window.addEventListener('offline', ()=>{
+  isOnline = false;
+  updateOfflineBanner();
+  updateSyncIndicator();
+});
 
-// Returns actual due Date object for a tenant in a given month/year
+function updateOfflineBanner(){
+  const el = document.getElementById('offline-banner');
+  if (el) el.style.display = (!isOnline) ? 'block' : 'none';
+}
+
+// ============================================================
+// SCREEN MANAGEMENT
+// ============================================================
+function showLoginScreen(){
+  document.getElementById('login-screen').style.display    = 'flex';
+  document.getElementById('loading-screen').style.display  = 'none';
+  document.getElementById('app').style.display             = 'none';
+  document.getElementById('migration-overlay').style.display = 'none';
+  // Returning user hint
+  if (userEmail){
+    document.getElementById('signin-returning').style.display = 'block';
+    document.getElementById('signin-email-hint').textContent  = userEmail;
+  }
+  updateOfflineBanner();
+}
+
+function showLoadingScreen(msg){
+  document.getElementById('loading-screen').style.display  = 'flex';
+  document.getElementById('loading-msg').textContent       = msg || 'Loading…';
+  document.getElementById('login-screen').style.display    = 'none';
+  document.getElementById('app').style.display             = 'none';
+  document.getElementById('migration-overlay').style.display = 'none';
+}
+
+function showApp(){
+  document.getElementById('app').style.display             = 'flex';
+  document.getElementById('login-screen').style.display    = 'none';
+  document.getElementById('loading-screen').style.display  = 'none';
+  document.getElementById('migration-overlay').style.display = 'none';
+  updateUserAvatar();
+  updateSyncIndicator();
+  updateDataScreen();
+  renderSummary();
+  renderLogForm();
+  renderTenantsList();
+}
+
+function showMigrationOverlay(){
+  document.getElementById('migration-overlay').style.display = 'flex';
+  document.getElementById('app').style.display              = 'none';
+  document.getElementById('loading-screen').style.display   = 'none';
+}
+
+// ============================================================
+// GOOGLE AUTH — GSI TOKEN CLIENT
+// ============================================================
+function initGoogleAuth(){
+  // Guard: warn if Client ID not configured
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.startsWith('YOUR_GOOGLE_CLIENT_ID')) {
+    document.getElementById('client-id-warning').style.display = 'block';
+    showLoginScreen();
+    return;
+  }
+
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id:      GOOGLE_CLIENT_ID,
+    scope:          'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file',
+    callback:       handleTokenResponse,
+    error_callback: handleAuthError,
+  });
+
+  showLoginScreen();
+}
+
+function handleGsiLoadError(){
+  // GSI script failed (likely offline)
+  console.warn('GSI library failed to load — possibly offline');
+  updateOfflineBanner();
+  const cached = localStorage.getItem(SK_CACHE);
+  if (cached) {
+    try { state = JSON.parse(cached); } catch {}
+  }
+  showLoginScreen();
+  if (!isOnline){
+    document.getElementById('offline-banner').style.display = 'block';
+  }
+}
+
+function signIn(){
+  if (!tokenClient){
+    toast('Google Sign-In is not ready yet. Are you offline?');
+    return;
+  }
+  // 'select_account' on first sign-in, '' (silent-ish) for returning users
+  tokenClient.requestAccessToken({ prompt: userEmail ? '' : 'select_account' });
+}
+
+async function handleTokenResponse(response){
+  if (response.error){
+    if (response.error !== 'popup_closed'){
+      toast('Sign-in error: ' + response.error);
+    }
+    showLoginScreen();
+    return;
+  }
+
+  accessToken    = response.access_token;
+  tokenExpiresAt = Date.now() + (response.expires_in * 1000);
+  offlineMode    = false;
+
+  // Proactive token refresh 5 minutes before expiry
+  const refreshDelay = Math.max(0, (response.expires_in - 300) * 1000);
+  setTimeout(()=>{ if(accessToken) tokenClient.requestAccessToken({prompt:''}); }, refreshDelay);
+
+  // Fetch user profile
+  try { await fetchUserInfo(); } catch {}
+
+  showLoadingScreen(spreadsheetId ? 'Loading your data…' : 'Creating your Google Sheet…');
+
+  try {
+    await findOrCreateSpreadsheet();
+    showLoadingScreen('Loading your data…');
+    await loadFromSheets();
+
+    // Check for legacy data migration
+    const legacy      = localStorage.getItem(LEGACY_KEY);
+    const migrated    = localStorage.getItem(SK_MIGRATED);
+    if (legacy && !migrated){
+      try {
+        const legacyData = JSON.parse(legacy);
+        const hasData    = (legacyData.tenants  && legacyData.tenants.length  > 0) ||
+                           (legacyData.payments && legacyData.payments.length > 0);
+        const sheetEmpty = state.tenants.length === 0 && state.payments.length === 0;
+        if (hasData && sheetEmpty){
+          pendingMigrationData = legacyData;
+          showMigrationUI(legacyData);
+          return;
+        }
+      } catch {}
+      localStorage.setItem(SK_MIGRATED, '1');
+    }
+
+    showApp();
+  } catch(err){
+    console.error('Startup error:', err);
+    toast('Could not load from Google Sheets — using cached data.');
+    // Fallback to cache
+    const cached = localStorage.getItem(SK_CACHE);
+    if (cached){ try { state = JSON.parse(cached); } catch {} }
+    showApp();
+  }
+}
+
+function handleAuthError(error){
+  const type = (error && error.type) || '';
+  if (type === 'popup_failed_to_open'){
+    toast('Popup blocked — please allow popups for this site and try again.');
+  } else if (type !== 'popup_closed'){
+    toast('Sign-in failed. Please try again.');
+  }
+  showLoginScreen();
+}
+
+async function fetchUserInfo(){
+  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{
+    headers:{ 'Authorization': `Bearer ${accessToken}` }
+  });
+  if (res.ok){
+    const info = await res.json();
+    userEmail = info.email || '';
+    userName  = info.name  || '';
+    localStorage.setItem(SK_USER_EMAIL, userEmail);
+    localStorage.setItem(SK_USER_NAME,  userName);
+  }
+}
+
+function confirmSignOut(){
+  if (confirm(`Sign out of ${userEmail || 'your account'}?\n\nYour data stays in Google Sheets. You'll need to sign in again to sync.`)){
+    signOut();
+  }
+}
+
+function signOut(){
+  if (accessToken){
+    try { google.accounts.oauth2.revoke(accessToken, ()=>{}); } catch {}
+  }
+  accessToken    = null;
+  tokenExpiresAt = 0;
+  offlineMode    = false;
+  // Keep spreadsheetId & userEmail for quick re-auth
+  showLoginScreen();
+}
+
+// ============================================================
+// OFFLINE CACHE MODE (no auth, read from localStorage)
+// ============================================================
+function useOfflineMode(){
+  const cached = localStorage.getItem(SK_CACHE);
+  if (!cached){
+    toast('No cached data found. You need to sign in at least once.');
+    return;
+  }
+  try { state = JSON.parse(cached); } catch {
+    toast('Cached data is unreadable.');
+    return;
+  }
+  offlineMode = true;
+  showApp();
+  toast('Offline mode — changes are saved locally only.');
+}
+
+// ============================================================
+// HEADER UI UPDATES
+// ============================================================
+function updateUserAvatar(){
+  const el = document.getElementById('user-avatar-btn');
+  if (!el) return;
+  const name  = userName || userEmail || '?';
+  const initls = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) || '?';
+  el.textContent = initls;
+  el.title = [userName, userEmail].filter(Boolean).join('\n');
+}
+
+function updateSyncIndicator(){
+  const el = document.getElementById('sync-indicator');
+  if (!el) return;
+  if (!accessToken){
+    el.textContent = offlineMode ? '📴' : '';
+    el.className   = 'sync-icon sync-offline';
+    el.title       = offlineMode ? 'Offline mode' : '';
+    return;
+  }
+  if (!isOnline){
+    el.textContent = '📴'; el.className = 'sync-icon sync-offline';
+    el.title = 'Offline — changes saved locally';
+    return;
+  }
+  if (isSyncing){
+    el.textContent = '↻'; el.className = 'sync-icon sync-active';
+    el.title = 'Syncing…';
+    return;
+  }
+  el.textContent = '✓'; el.className = 'sync-icon sync-ok';
+  el.title = 'Synced with Google Sheets';
+}
+
+function updateDataScreen(){
+  const initls = (userName || userEmail || '?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const nameEl  = document.getElementById('data-user-name');
+  const emailEl = document.getElementById('data-user-email');
+  const avatEl  = document.getElementById('data-user-avatar');
+  if (nameEl)  nameEl.textContent  = userName  || 'Unknown';
+  if (emailEl) emailEl.textContent = userEmail || (offlineMode ? 'Offline mode' : 'Not signed in');
+  if (avatEl)  avatEl.textContent  = initls;
+
+  const ls = localStorage.getItem(SK_LAST_SYNC);
+  const el = document.getElementById('last-sync-text');
+  if (el && ls){
+    const d = new Date(ls);
+    el.textContent = 'Last synced ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) +
+                     ', ' + d.toLocaleDateString([], {month:'short',day:'numeric'});
+  }
+}
+
+function openSheetsLink(){
+  if (spreadsheetId){
+    window.open(`https://docs.google.com/spreadsheets/d/${spreadsheetId}`, '_blank');
+  } else {
+    toast('No spreadsheet linked yet — sign in first.');
+  }
+}
+
+async function manualSync(){
+  if (!accessToken || offlineMode){
+    toast('Sign in to sync with Google Sheets.');
+    return;
+  }
+  if (!isOnline){
+    toast('No internet connection.');
+    return;
+  }
+  toast('Syncing…');
+  clearTimeout(syncDebounceTimer);
+  try {
+    await syncToSheets();
+    toast('Synced ✓');
+  } catch(err){
+    toast('Sync failed: ' + (err.message || 'unknown error'));
+  }
+}
+
+// ============================================================
+// GOOGLE SHEETS API
+// ============================================================
+async function sheetsRequest(url, options={}){
+  if (!accessToken) throw new Error('Not signed in');
+
+  const headers = { 'Authorization': `Bearer ${accessToken}` };
+  if (options.body) headers['Content-Type'] = 'application/json';
+
+  const res = await fetch(url, { ...options, headers });
+
+  if (res.status === 401){
+    accessToken = null;
+    updateSyncIndicator();
+    showLoginScreen();
+    throw new Error('Session expired — please sign in again');
+  }
+  if (!res.ok){
+    const txt = await res.text().catch(()=>res.statusText);
+    throw new Error(`API ${res.status}: ${txt.slice(0,200)}`);
+  }
+  if (res.status === 204) return null;
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('json') ? res.json() : null;
+}
+
+async function findOrCreateSpreadsheet(){
+  // 1. Verify stored ID still exists
+  if (spreadsheetId){
+    try {
+      await sheetsRequest(`${SHEETS_BASE}/${spreadsheetId}?fields=spreadsheetId`);
+      return; // Valid
+    } catch(err){
+      if (err.message.includes('404') || err.message.includes('403') || err.message.includes('400')){
+        spreadsheetId = null;
+        localStorage.removeItem(SK_SHEET_ID);
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  // 2. Search Drive for an existing "Rent Tracker Data" spreadsheet
+  try {
+    const q   = `name='Rent Tracker Data' and trashed=false and mimeType='application/vnd.google-apps.spreadsheet'`;
+    const res = await sheetsRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=1`);
+    if (res && res.files && res.files.length > 0){
+      spreadsheetId = res.files[0].id;
+      localStorage.setItem(SK_SHEET_ID, spreadsheetId);
+      return;
+    }
+  } catch {} // Not found or Drive search failed
+
+  // 3. Create a new spreadsheet
+  const created = await sheetsRequest(SHEETS_BASE, {
+    method: 'POST',
+    body: JSON.stringify({
+      properties: { title: 'Rent Tracker Data' },
+      sheets: [
+        { properties: { title:'Tenants',    index:0 } },
+        { properties: { title:'Properties', index:1 } },
+        { properties: { title:'Payments',   index:2 } },
+      ],
+    }),
+  });
+  spreadsheetId = created.spreadsheetId;
+  localStorage.setItem(SK_SHEET_ID, spreadsheetId);
+
+  // Write headers on first creation
+  await sheetsRequest(`${SHEETS_BASE}/${spreadsheetId}/values:batchUpdate`, {
+    method: 'POST',
+    body: JSON.stringify({
+      valueInputOption: 'RAW',
+      data: [
+        { range:'Tenants!A1:G1',    values:[['id','name','unit','rent','propertyId','dueDay','archivedFrom']] },
+        { range:'Properties!A1:C1', values:[['id','name','archived']] },
+        { range:'Payments!A1:F1',   values:[['id','tenantId','amount','date','month','note']] },
+      ],
+    }),
+  });
+}
+
+async function loadFromSheets(){
+  const res = await sheetsRequest(
+    `${SHEETS_BASE}/${spreadsheetId}/values:batchGet` +
+    `?ranges=Tenants!A:G&ranges=Properties!A:C&ranges=Payments!A:F`
+  );
+  const vrs     = (res && res.valueRanges) || [];
+  const tRows   = (vrs[0] && vrs[0].values) || [];
+  const pRows   = (vrs[1] && vrs[1].values) || [];
+  const paRows  = (vrs[2] && vrs[2].values) || [];
+
+  state = {
+    tenants:    parseSheetRows(tRows,  rowToTenant),
+    properties: parseSheetRows(pRows,  rowToProperty),
+    payments:   parseSheetRows(paRows, rowToPayment),
+  };
+  localStorage.setItem(SK_CACHE, JSON.stringify(state));
+}
+
+// ---- Row parsers ----
+function parseSheetRows(rows, converter){
+  if (rows.length < 2) return [];
+  return rows.slice(1)
+    .filter(r => r && r[0] && r[0].toString().trim())
+    .map(converter)
+    .filter(Boolean);
+}
+
+function rowToTenant(r){
+  const dueDay = r[5] ? parseInt(r[5]) : null;
+  const obj = {
+    id:          (r[0]||'').trim(),
+    name:        (r[1]||'').trim(),
+    unit:        (r[2]||'').trim(),
+    rent:        parseFloat(r[3]) || 0,
+    propertyId:  (r[4]||'').trim(),
+    dueDay:      isNaN(dueDay) ? null : dueDay,
+    archivedFrom:(r[6]||'').trim() || undefined,
+  };
+  if (!obj.archivedFrom) delete obj.archivedFrom;
+  return obj.id ? obj : null;
+}
+
+function rowToProperty(r){
+  const obj = {
+    id:       (r[0]||'').trim(),
+    name:     (r[1]||'').trim(),
+    archived: r[2] === 'true',
+  };
+  if (!obj.archived) delete obj.archived;
+  return obj.id ? obj : null;
+}
+
+function rowToPayment(r){
+  const obj = {
+    id:       (r[0]||'').trim(),
+    tenantId: (r[1]||'').trim(),
+    amount:   parseFloat(r[2]) || 0,
+    date:     (r[3]||'').trim(),
+    month:    (r[4]||'').trim(),
+    note:     (r[5]||'').trim(),
+  };
+  if (!obj.note) delete obj.note;
+  return (obj.id && obj.tenantId) ? obj : null;
+}
+
+// ---- Row serialisers ----
+function tenantToRow(t){
+  return [t.id, t.name, t.unit||'', t.rent||0, t.propertyId||'', t.dueDay!=null?t.dueDay:'', t.archivedFrom||''];
+}
+function propertyToRow(p){ return [p.id, p.name, p.archived?'true':'']; }
+function paymentToRow(p){ return [p.id, p.tenantId, p.amount, p.date, p.month, p.note||'']; }
+
+// ============================================================
+// SAVE & SYNC
+// ============================================================
+function save(){
+  // Always write to localStorage immediately (offline cache / backup)
+  localStorage.setItem(SK_CACHE, JSON.stringify(state));
+
+  if (offlineMode || !accessToken) return; // Offline-only — no cloud sync
+
+  // Show "pending" indicator
+  const si = document.getElementById('sync-indicator');
+  if (si){ si.textContent='↻'; si.className='sync-icon sync-pending'; si.title='Saving…'; }
+
+  // Debounce cloud sync by 1.5 s
+  clearTimeout(syncDebounceTimer);
+  syncDebounceTimer = setTimeout(syncToSheets, 1500);
+}
+
+async function syncToSheets(){
+  if (!accessToken || !spreadsheetId || offlineMode) return;
+  if (!isOnline){ updateSyncIndicator(); return; }
+  if (isSyncing){ hasPendingSync = true; return; }
+
+  isSyncing = true;
+  updateSyncIndicator();
+
+  try {
+    const tenantsData    = [['id','name','unit','rent','propertyId','dueDay','archivedFrom'], ...state.tenants.map(tenantToRow)];
+    const propertiesData = [['id','name','archived'], ...state.properties.map(propertyToRow)];
+    const paymentsData   = [['id','tenantId','amount','date','month','note'], ...state.payments.map(paymentToRow)];
+
+    // Clear existing data then re-write (ensures deleted rows are gone)
+    await sheetsRequest(`${SHEETS_BASE}/${spreadsheetId}/values:batchClear`, {
+      method:'POST',
+      body: JSON.stringify({ ranges:['Tenants!A:Z','Properties!A:Z','Payments!A:Z'] }),
+    });
+
+    await sheetsRequest(`${SHEETS_BASE}/${spreadsheetId}/values:batchUpdate`, {
+      method:'POST',
+      body: JSON.stringify({
+        valueInputOption:'RAW',
+        data:[
+          { range:'Tenants!A1',    values:tenantsData    },
+          { range:'Properties!A1', values:propertiesData },
+          { range:'Payments!A1',   values:paymentsData   },
+        ],
+      }),
+    });
+
+    // Record sync time
+    const now = new Date().toISOString();
+    localStorage.setItem(SK_LAST_SYNC, now);
+
+    // Update Data screen if visible
+    const lastSyncEl = document.getElementById('last-sync-text');
+    if (lastSyncEl){
+      const d = new Date(now);
+      lastSyncEl.textContent = 'Last synced ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) +
+                               ', ' + d.toLocaleDateString([],{month:'short',day:'numeric'});
+    }
+
+    updateSyncIndicator(); // Shows ✓
+
+  } catch(err){
+    console.error('Sync error:', err);
+    const si = document.getElementById('sync-indicator');
+    if (si){ si.textContent='⚠'; si.className='sync-icon sync-error'; si.title='Sync failed — will retry'; }
+    // Retry in 30 s if not a fatal auth error
+    if (!err.message.includes('Session expired')){
+      setTimeout(syncToSheets, 30000);
+    }
+  } finally {
+    isSyncing = false;
+    if (hasPendingSync){
+      hasPendingSync = false;
+      syncToSheets();
+    }
+  }
+}
+
+// ============================================================
+// MIGRATION FROM LEGACY LOCALSTORAGE DATA
+// ============================================================
+function showMigrationUI(legacyData){
+  const t  = (legacyData.tenants    || []).length;
+  const pr = (legacyData.properties || []).length;
+  const py = (legacyData.payments   || []).length;
+  document.getElementById('migration-preview').textContent =
+    `${t} tenant${t!==1?'s':''} · ${pr} propert${pr!==1?'ies':'y'} · ${py} payment${py!==1?'s':''}`;
+  showMigrationOverlay();
+}
+
+async function doMigration(){
+  if (!pendingMigrationData) return;
+  showLoadingScreen('Migrating your data to Google Sheets…');
+  try {
+    state = {
+      tenants:    pendingMigrationData.tenants    || [],
+      properties: pendingMigrationData.properties || [],
+      payments:   pendingMigrationData.payments   || [],
+    };
+    localStorage.setItem(SK_CACHE, JSON.stringify(state));
+    // Force immediate sync (bypass debounce)
+    clearTimeout(syncDebounceTimer);
+    isSyncing = false;
+    await syncToSheets();
+    localStorage.setItem(SK_MIGRATED, '1');
+    pendingMigrationData = null;
+    toast('Data migrated successfully ✓');
+    showApp();
+  } catch(err){
+    toast('Migration failed: ' + (err.message||'unknown error'));
+    localStorage.setItem(SK_MIGRATED, '1'); // Don't ask again
+    pendingMigrationData = null;
+    showApp();
+  }
+}
+
+function skipMigration(){
+  localStorage.setItem(SK_MIGRATED, '1');
+  pendingMigrationData = null;
+  showApp();
+}
+
+// ============================================================
+// APP NAVIGATION
+// ============================================================
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.screen===name));
+  if (name==='summary') renderSummary();
+  if (name==='log')     renderLogForm();
+  if (name==='tenants') renderTenantsList();
+  if (name==='data')    updateDataScreen();
+}
+
+function changeMonth(dir){
+  currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth()+dir, 1);
+  renderSummary();
+}
+
+function goLogFromSummary(tid){
+  logMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+  document.getElementById('detail-screen').style.display = 'none';
+  showScreen('log');
+  setTimeout(()=>{ renderLogForm(); if(tid) document.getElementById('log-tenant').value=tid; }, 60);
+}
+
+function logMonthStep(dir){
+  logMonth = new Date(logMonth.getFullYear(), logMonth.getMonth()+dir, 1);
+  document.getElementById('log-month-display').textContent = monthStr(logMonth);
+}
+
+// ============================================================
+// SUMMARY SCREEN
+// ============================================================
+function lastDayOfMonth(year,month){ return new Date(year,month+1,0).getDate(); }
+
 function getDueDate(tenant,year,month){
-  if(!tenant.dueDay)return null;
-  const last=lastDayOfMonth(year,month);
-  // If tenant set dueDay=31 (meaning "last day"), always use last day of each month
-  const day=tenant.dueDay>=29?last:Math.min(tenant.dueDay,last);
+  if (!tenant.dueDay) return null;
+  const last = lastDayOfMonth(year,month);
+  const day  = tenant.dueDay>=29 ? last : Math.min(tenant.dueDay,last);
   return new Date(year,month,day);
 }
 
-// Returns due status for current real today vs the due date in currentMonth's context
 function getDueStatus(tenant,mk){
-  if(!tenant.dueDay)return null;
-  const [yr,mo]=mk.split('-').map(Number);
-  const due=getDueDate(tenant,yr,mo-1);
-  if(!due)return null;
-  const now=new Date(today.getFullYear(),today.getMonth(),today.getDate());
-  const dueOnly=new Date(due.getFullYear(),due.getMonth(),due.getDate());
-  const diff=Math.round((dueOnly-now)/(1000*60*60*24));
-  if(diff<0)return'overdue';
-  if(diff===0)return'today';
-  if(diff<=3)return'soon';
+  if (!tenant.dueDay) return null;
+  const [yr,mo] = mk.split('-').map(Number);
+  const due = getDueDate(tenant,yr,mo-1);
+  if (!due) return null;
+  const now     = new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  const dueOnly = new Date(due.getFullYear(),due.getMonth(),due.getDate());
+  const diff    = Math.round((dueOnly-now)/(1000*60*60*24));
+  if (diff<0)   return 'overdue';
+  if (diff===0) return 'today';
+  if (diff<=3)  return 'soon';
   return null;
 }
 
 function dueBadgeHtml(status){
-  if(!status)return'';
-  if(status==='overdue')return`<span class="due-badge due-overdue-badge">⚠ Overdue</span>`;
-  if(status==='today')return`<span class="due-badge due-today-badge">● Due today</span>`;
-  if(status==='soon')return`<span class="due-badge due-soon-badge">◷ Due soon</span>`;
-  return'';
-}
-
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
-  if(name==='summary')renderSummary();
-  if(name==='log')renderLogForm();
-  if(name==='tenants')renderTenantsList();
-}
-
-function changeMonth(dir){
-  currentMonth=new Date(currentMonth.getFullYear(),currentMonth.getMonth()+dir,1);
-  renderSummary();
-}
-
-// #6: allow summary tab to set log month before switching
-function goLogFromSummary(tid){
-  logMonth=new Date(currentMonth.getFullYear(),currentMonth.getMonth(),1);
-  document.getElementById('detail-screen').style.display='none';
-  showScreen('log');
-  setTimeout(()=>{
-    renderLogForm();
-    if(tid)document.getElementById('log-tenant').value=tid;
-  },60);
-}
-
-function logMonthStep(dir){
-  logMonth=new Date(logMonth.getFullYear(),logMonth.getMonth()+dir,1);
-  document.getElementById('log-month-display').textContent=monthStr(logMonth);
+  if (!status) return '';
+  if (status==='overdue') return `<span class="due-badge due-overdue-badge">⚠ Overdue</span>`;
+  if (status==='today')   return `<span class="due-badge due-today-badge">● Due today</span>`;
+  if (status==='soon')    return `<span class="due-badge due-soon-badge">◷ Due soon</span>`;
+  return '';
 }
 
 function renderSummary(){
-  document.getElementById('month-display').textContent=monthStr(currentMonth);
-  const mk=getKey(currentMonth);
-  const activeTenants=state.tenants.filter(t=>!t.archivedFrom||t.archivedFrom>mk);
+  document.getElementById('month-display').textContent = monthStr(currentMonth);
+  const mk = getKey(currentMonth);
+  const activeTenants = state.tenants.filter(t=>!t.archivedFrom||t.archivedFrom>mk);
   let expected=0;
   activeTenants.forEach(t=>expected+=(t.rent||0));
-
   const paidByTenant={};
   state.payments.filter(p=>p.month===mk).forEach(p=>{
     paidByTenant[p.tenantId]=(paidByTenant[p.tenantId]||0)+p.amount;
   });
   const collected=Object.values(paidByTenant).reduce((a,b)=>a+b,0);
   const owed=Math.max(0,expected-collected);
-
   document.getElementById('m-expected').textContent=fmt(expected);
   document.getElementById('m-collected').textContent=fmt(collected);
   document.getElementById('m-owed').textContent=fmt(owed);
-
   const list=document.getElementById('summary-list');
-  if(!state.tenants.length){
+  if (!state.tenants.length){
     list.innerHTML='<div class="empty-state"><div class="empty-icon">🏘️</div><div class="empty-title">No tenants yet</div><div class="empty-sub">Add your tenants in the Tenants tab.</div></div>';
     return;
   }
-
   function renderGroup(tenants,propName,showLabel){
     const rows=tenants.map(t=>{
       const paid=paidByTenant[t.id]||0;
@@ -432,7 +1339,6 @@ function renderSummary(){
         :paid>0
           ?`<span class="status-badge badge-partial">Partial · ${fmtD(owes)} left</span>`
           :`<span class="status-badge badge-owed">Owes ${fmt(t.rent||0)}</span>`;
-      // Only show due badge if tenant hasn't paid yet this month
       const dueStatus=paid>=(t.rent||0)?null:getDueStatus(t,mk);
       const dBadge=dueBadgeHtml(dueStatus);
       return `<div class="tenant-row" onclick="openDetail('${t.id}')">
@@ -445,7 +1351,6 @@ function renderSummary(){
     return(showLabel?`<div class="property-label">${propName}</div>`:'')
       +`<div class="grouped-cards" style="margin-bottom:14px;">${rows}</div>`;
   }
-
   let html='';
   if(state.properties.length){
     const grouped={};
@@ -458,9 +1363,12 @@ function renderSummary(){
   list.innerHTML=html||'<div style="color:var(--text2);font-size:14px;padding:8px 0;">No active tenants this month.</div>';
 }
 
+// ============================================================
+// DETAIL OVERLAY
+// ============================================================
 function openDetail(tid){
   detailTenantId=tid;
-  const t=state.tenants.find(t=>t.id===tid);if(!t)return;
+  const t=state.tenants.find(t=>t.id===tid); if(!t)return;
   const color=colorFor(tid);
   const prop=state.properties.find(p=>p.id===t.propertyId);
   const mk=getKey(currentMonth);
@@ -469,17 +1377,13 @@ function openDetail(tid){
   const paidThisMonth=monthPay.reduce((a,p)=>a+p.amount,0);
   const owes=(t.rent||0)-paidThisMonth;
   const allPayments=state.payments.filter(p=>p.tenantId===tid).slice().reverse();
-
-  // Due date display
   const [yr,mo]=mk.split('-').map(Number);
   const dueDate=getDueDate(t,yr,mo-1);
   const dueDateStr=dueDate?`${dueDate.getDate()} ${MONTHS[dueDate.getMonth()]}`:'Not set';
-
   document.getElementById('detail-avatar').style.cssText=`background:${color}22;color:${color};width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;`;
   document.getElementById('detail-avatar').textContent=initials(t.name);
   document.getElementById('detail-name').textContent=t.name;
   document.getElementById('detail-meta').textContent=[t.unit,prop?prop.name:''].filter(Boolean).join(' · ');
-
   const payHtml=allPayments.length
     ?allPayments.map(p=>`
       <div class="payment-item" id="pi-${p.id}">
@@ -499,7 +1403,6 @@ function openDetail(tid){
         </div>
       </div>`).join('')
     :'<div style="padding:14px 16px;font-size:14px;color:var(--text2);">No payments recorded yet.</div>';
-
   document.getElementById('detail-body').innerHTML=`
     <div class="detail-section">
       <div class="section-title">${monthStr(currentMonth)}</div>
@@ -517,37 +1420,40 @@ function openDetail(tid){
       <div class="section-title">All-time payment history</div>
       <div class="detail-card">${payHtml}</div>
     </div>`;
-
   document.getElementById('detail-screen').style.display='block';
   document.getElementById('detail-screen').scrollTop=0;
 }
 
-function togglePayDel(pid){document.getElementById('pda-'+pid).classList.toggle('open');}
+function togglePayDel(pid){ document.getElementById('pda-'+pid).classList.toggle('open'); }
 function deletePayment(pid){
   state.payments=state.payments.filter(p=>p.id!==pid);
-  save();toast('Payment deleted');openDetail(detailTenantId);
+  save(); toast('Payment deleted'); openDetail(detailTenantId);
 }
-function closeDetail(){document.getElementById('detail-screen').style.display='none';renderSummary();}
+function closeDetail(){
+  document.getElementById('detail-screen').style.display='none';
+  renderSummary();
+}
 
+// ============================================================
+// LOG PAYMENT SCREEN
+// ============================================================
 function renderLogForm(){
-  const tSel=document.getElementById('log-tenant');
-  const active=state.tenants.filter(t=>!t.archivedFrom);
-  tSel.innerHTML=active.length
-    ?active.map(t=>`<option value="${t.id}">${t.name}${t.unit?' · '+t.unit:''}</option>`).join('')
-    :'<option value="">No tenants — add in Tenants tab</option>';
-  // #3 always reset to today's date
+  const tSel  = document.getElementById('log-tenant');
+  const active = state.tenants.filter(t=>!t.archivedFrom);
+  tSel.innerHTML = active.length
+    ? active.map(t=>`<option value="${t.id}">${t.name}${t.unit?' · '+t.unit:''}</option>`).join('')
+    : '<option value="">No tenants — add in Tenants tab</option>';
   document.getElementById('log-date').value=todayStr();
-  // #4 logMonth stays as set (defaults to current month on init)
   document.getElementById('log-month-display').textContent=monthStr(logMonth);
 }
 
 function savePayment(){
-  const tid=document.getElementById('log-tenant').value;
-  const amount=parseFloat(document.getElementById('log-amount').value);
-  const date=document.getElementById('log-date').value;
-  const month=getKey(logMonth);
-  const note=document.getElementById('log-note').value.trim();
-  if(!tid||!amount||isNaN(amount)||amount<=0||!date){toast('Fill in tenant, amount, and date.');return;}
+  const tid    = document.getElementById('log-tenant').value;
+  const amount = parseFloat(document.getElementById('log-amount').value);
+  const date   = document.getElementById('log-date').value;
+  const month  = getKey(logMonth);
+  const note   = document.getElementById('log-note').value.trim();
+  if (!tid||!amount||isNaN(amount)||amount<=0||!date){toast('Fill in tenant, amount, and date.');return;}
   state.payments.push({id:uid(),tenantId:tid,amount,date,month,note});
   save();
   document.getElementById('log-amount').value='';
@@ -555,11 +1461,17 @@ function savePayment(){
   toast('Payment recorded ✓');
 }
 
+// ============================================================
+// TENANTS & PROPERTIES SCREEN
+// ============================================================
+function ordinal(n){
+  const s=['th','st','nd','rd'], v=n%100;
+  return s[(v-20)%10]||s[v]||s[0];
+}
+
 function renderTenantsList(){
   const el=document.getElementById('tenants-list');
   let html='';
-
-  // Active properties only (#1 hide archived/deleted)
   const activeProps=state.properties.filter(p=>!p.archived);
   if(activeProps.length){
     html+='<div class="section-title">Properties</div><div class="list-card" style="margin-bottom:16px;">';
@@ -579,10 +1491,8 @@ function renderTenantsList(){
       </div>`).join('');
     html+='</div>';
   }
-
-  const active=state.tenants.filter(t=>!t.archivedFrom);
-  const archived=state.tenants.filter(t=>t.archivedFrom);
-
+  const active   = state.tenants.filter(t=>!t.archivedFrom);
+  const archived = state.tenants.filter(t=>t.archivedFrom);
   if(active.length){
     html+='<div class="section-title">Active tenants</div><div class="list-card" style="margin-bottom:16px;">';
     html+=active.map(t=>{
@@ -610,8 +1520,6 @@ function renderTenantsList(){
     }).join('');
     html+='</div>';
   }
-
-  // #3 archived tenants — collapsed by default, tap to expand
   if(archived.length){
     html+=`<div style="margin-bottom:16px;">
       <button onclick="toggleArchived()" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;cursor:pointer;padding:4px 0 8px;">
@@ -627,46 +1535,46 @@ function renderTenantsList(){
       </div>
     </div>`;
   }
-
   if(!activeProps.length&&!active.length&&!archived.length){
     html='<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">No tenants yet</div><div class="empty-sub">Add a property, then add your tenants.</div></div>';
   }
   el.innerHTML=html;
 }
 
-function ordinal(n){
-  const s=['th','st','nd','rd'];
-  const v=n%100;
-  return s[(v-20)%10]||s[v]||s[0];
-}
-
-function toggleRowDel(key){document.getElementById('rdc-'+key).classList.toggle('open');}
+function toggleRowDel(key){ document.getElementById('rdc-'+key).classList.toggle('open'); }
 
 function archiveTenant(id){
   const next=new Date(today.getFullYear(),today.getMonth()+1,1);
   const t=state.tenants.find(t=>t.id===id);
   if(t){t.archivedFrom=getKey(next);}
-  save();renderTenantsList();renderLogForm();toast('Archived from '+monthStr(next)+'. History kept.');
+  save(); renderTenantsList(); renderLogForm(); toast('Archived from '+monthStr(next)+'. History kept.');
 }
 function unarchiveTenant(id){
   const t=state.tenants.find(t=>t.id===id);
   if(t){delete t.archivedFrom;}
-  save();renderTenantsList();renderLogForm();toast('Tenant restored');
+  save(); renderTenantsList(); renderLogForm(); toast('Tenant restored');
 }
-// #1 archive property instead of deleting
 function archiveProperty(id){
   const p=state.properties.find(p=>p.id===id);
   if(p){p.archived=true;}
-  save();renderTenantsList();toast('Property removed');
+  save(); renderTenantsList(); toast('Property removed');
+}
+function toggleArchived(){
+  const list=document.getElementById('archived-list');
+  const chevron=document.getElementById('archived-chevron');
+  if(!list)return;
+  const open=list.style.display==='none';
+  list.style.display=open?'block':'none';
+  if(chevron)chevron.style.transform=open?'rotate(90deg)':'rotate(0deg)';
 }
 
-// #2 openModal handles both add and edit for tenant and property
+// ============================================================
+// TENANT / PROPERTY MODAL
+// ============================================================
 function openModal(mode,editId){
-  modalMode=mode;
-  modalEditId=editId;
+  modalMode=mode; modalEditId=editId;
   const title=document.getElementById('modal-title');
   const body=document.getElementById('modal-body');
-
   if(mode==='property'){
     const existing=editId?state.properties.find(p=>p.id===editId):null;
     title.textContent=existing?'Edit property':'Add property';
@@ -677,8 +1585,6 @@ function openModal(mode,editId){
     title.textContent=existing?'Edit tenant':'Add tenant';
     const activeProps=state.properties.filter(p=>!p.archived);
     const propOpts=activeProps.map(p=>`<option value="${p.id}"${existing&&existing.propertyId===p.id?' selected':''}>${p.name}</option>`).join('');
-
-    // Due day stepper state — 0 means "no due date", 1-31 are days (31 = last day)
     const initDay=existing&&existing.dueDay?existing.dueDay:0;
     body.innerHTML=`
       <div class="modal-field"><label>Full name</label><input type="text" id="m-t-name" placeholder="Tenant name" value="${existing?existing.name:''}"></div>
@@ -699,21 +1605,21 @@ function openModal(mode,editId){
   }
   document.getElementById('modal-overlay').classList.add('open');
 }
-function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
-function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+
+function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e){ if(e.target===document.getElementById('modal-overlay'))closeModal(); }
 
 function saveModal(){
   if(modalMode==='property'){
     const name=document.getElementById('m-prop-name').value.trim();
     if(!name){toast('Enter a property name.');return;}
     if(modalEditId){
-      // #2 edit existing property
       const p=state.properties.find(p=>p.id===modalEditId);
       if(p){p.name=name;}
-      save();closeModal();renderTenantsList();renderSummary();toast('Property updated');
+      save(); closeModal(); renderTenantsList(); renderSummary(); toast('Property updated');
     }else{
       state.properties.push({id:uid(),name});
-      save();closeModal();renderTenantsList();toast('Property added');
+      save(); closeModal(); renderTenantsList(); toast('Property added');
     }
   }else{
     const name=document.getElementById('m-t-name').value.trim();
@@ -725,81 +1631,82 @@ function saveModal(){
     const propId=propEl?propEl.value:'';
     if(!name){toast('Enter a tenant name.');return;}
     if(modalEditId){
-      // #2 edit existing tenant — changes apply immediately going forward
       const t=state.tenants.find(t=>t.id===modalEditId);
       if(t){t.name=name;t.unit=unit;t.rent=rent;t.propertyId=propId;t.dueDay=dueDay;}
-      save();closeModal();renderTenantsList();renderSummary();renderLogForm();toast('Tenant updated');
+      save(); closeModal(); renderTenantsList(); renderSummary(); renderLogForm(); toast('Tenant updated');
     }else{
       state.tenants.push({id:uid(),name,unit,rent,propertyId:propId,dueDay});
-      save();closeModal();renderTenantsList();renderLogForm();toast('Tenant added');
+      save(); closeModal(); renderTenantsList(); renderLogForm(); toast('Tenant added');
     }
   }
 }
 
-function exportData(){
-  const json=JSON.stringify(state,null,2);
-  const blob=new Blob([json],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;
-  const d=new Date();
-  a.download=`rent-tracker-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;
-  a.click();URL.revokeObjectURL(url);toast('Backup downloaded');
-}
-function importData(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    try{
-      const imported=JSON.parse(ev.target.result);
-      if(!imported.tenants||!imported.payments)throw new Error('bad');
-      state=imported;save();
-      renderSummary();renderTenantsList();renderLogForm();
-      toast('Data restored ✓');
-    }catch(err){toast('Invalid backup file.');}
-  };
-  reader.readAsText(file);e.target.value='';
-}
-function toggleClearConfirm(){document.getElementById('clear-confirm').classList.toggle('open');}
-function clearAllData(){
-  state={tenants:[],properties:[],payments:[]};
-  save();toggleClearConfirm();
-  renderSummary();renderTenantsList();renderLogForm();
-  toast('All data cleared');
-}
-
-function toggleArchived(){
-  const list=document.getElementById('archived-list');
-  const chevron=document.getElementById('archived-chevron');
-  if(!list)return;
-  const open=list.style.display==='none';
-  list.style.display=open?'block':'none';
-  if(chevron)chevron.style.transform=open?'rotate(90deg)':'rotate(0deg)';
-}
-
-// Due day stepper helpers
 function updateDueDayDisplay(val){
-  const el=document.getElementById('due-day-display');
-  if(!el)return;
+  const el=document.getElementById('due-day-display'); if(!el)return;
   if(!val||val===0){el.textContent='No due date';el.style.color='var(--text3)';}
   else if(val===31){el.textContent='Last day of month';el.style.color='var(--text)';}
   else{el.textContent=val+ordinal(val)+' of the month';el.style.color='var(--text)';}
 }
 function stepDueDay(dir){
-  const input=document.getElementById('m-t-due');
-  if(!input)return;
+  const input=document.getElementById('m-t-due'); if(!input)return;
   let val=parseInt(input.value)||0;
-  // Cycle: 0 (none) → 1 → 2 → ... → 31 → 0
-  val+=dir;
-  if(val>31)val=0;
-  if(val<0)val=31;
-  input.value=val;
-  updateDueDayDisplay(val);
+  val+=dir; if(val>31)val=0; if(val<0)val=31;
+  input.value=val; updateDueDayDisplay(val);
 }
 
-load();
-renderSummary();
-renderLogForm();
-renderTenantsList();
+// ============================================================
+// EXPORT / IMPORT / CLEAR
+// ============================================================
+function exportData(){
+  const json=JSON.stringify(state,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url;
+  const d=new Date();
+  a.download=`rent-tracker-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;
+  a.click(); URL.revokeObjectURL(url); toast('Backup downloaded');
+}
+
+function importData(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const imported=JSON.parse(ev.target.result);
+      if(!imported.tenants||!imported.payments)throw new Error('bad');
+      state=imported; save();
+      renderSummary(); renderTenantsList(); renderLogForm();
+      toast('Data restored ✓ — syncing to Google Sheets…');
+    }catch(err){ toast('Invalid backup file.'); }
+  };
+  reader.readAsText(file); e.target.value='';
+}
+
+function toggleClearConfirm(){ document.getElementById('clear-confirm').classList.toggle('open'); }
+function clearAllData(){
+  state={tenants:[],properties:[],payments:[]};
+  save(); toggleClearConfirm();
+  renderSummary(); renderTenantsList(); renderLogForm();
+  toast('All data cleared');
+}
+
+// ============================================================
+// INIT — show login screen on page load (data loads after auth)
+// ============================================================
+// Load cache into state immediately (used if GSI fails / offline mode)
+(function(){
+  const cached = localStorage.getItem(SK_CACHE);
+  if (cached){ try { state = JSON.parse(cached); } catch {} }
+  // Show login screen; initGoogleAuth() called by GSI onload
+  // If GSI is already cached it may fire before DOMContentLoaded — guard:
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('login-screen').style.display = 'flex';
+    });
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+  }
+})();
 </script>
 </body>
 </html>
