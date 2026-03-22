@@ -10,156 +10,155 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F7F5F0;
-  --surface: #FFFFFF;
-  --surface2: #F0EDE6;
-  --border: #E2DDD4;
-  --text: #1A1714;
-  --text2: #6B6560;
-  --text3: #9E9890;
-  --accent: #2D5016;
-  --accent-light: #EAF0E1;
-  --accent-mid: #4A7A28;
-  --danger: #8B2020;
-  --danger-light: #FAEAEA;
-  --warning: #7A5010;
-  --warning-light: #FDF3E3;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#F7F5F0;--surface:#FFFFFF;--surface2:#F0EDE6;--border:#E2DDD4;
+  --text:#1A1714;--text2:#6B6560;--text3:#9E9890;
+  --accent:#2D5016;--accent-light:#EAF0E1;--accent-mid:#4A7A28;
+  --danger:#8B2020;--danger-light:#FAEAEA;
+  --warning:#7A5010;--warning-light:#FDF3E3;
+  --due-soon:#7A5010;--due-soon-bg:#FDF3E3;
+  --due-today:#8B2020;--due-today-bg:#FAEAEA;
+  --overdue:#6B1A1A;--overdue-bg:#F5D5D5;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); overflow: hidden; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+#header{background:var(--surface);border-bottom:1px solid var(--border);padding:calc(var(--safe-top) + 14px) 20px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#header-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);}
+#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bottom) + 72px);}
+#nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:var(--safe-bottom);z-index:100;}
+.nav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.3px;}
+.nav-btn.active{color:var(--accent-mid);}
+.nav-icon{font-size:20px;line-height:1;}
+.screen{display:none;}.screen.active{display:block;}
 
-#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-#header { background: var(--surface); border-bottom: 1px solid var(--border); padding: calc(var(--safe-top) + 14px) 20px 14px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-#header-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); }
-#content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--safe-bottom) + 72px); }
+/* Month nav */
+.month-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0;}
+.month-nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--text);line-height:1;}
+#month-display{font-size:17px;font-weight:600;color:var(--text);}
 
-#nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; padding-bottom: var(--safe-bottom); z-index: 100; }
-.nav-btn { flex: 1; padding: 10px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.3px; }
-.nav-btn.active { color: var(--accent-mid); }
-.nav-icon { font-size: 20px; line-height: 1; }
+/* Metrics */
+.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px 20px;}
+.metric{background:var(--surface);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid var(--border);}
+.metric-val{font-size:20px;font-weight:600;}
+.metric-lbl{font-size:10px;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px;}
+.metric.green .metric-val{color:var(--accent-mid);}
+.metric.red .metric-val{color:var(--danger);}
 
-.screen { display: none; }
-.screen.active { display: block; }
-
-.month-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 0; }
-.month-nav-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; color: var(--text); line-height: 1; }
-#month-display { font-size: 17px; font-weight: 600; color: var(--text); }
-
-.metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 14px 20px; }
-.metric { background: var(--surface); border-radius: 14px; padding: 14px 10px; text-align: center; border: 1px solid var(--border); }
-.metric-val { font-size: 20px; font-weight: 600; }
-.metric-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
-.metric.green .metric-val { color: var(--accent-mid); }
-.metric.red .metric-val { color: var(--danger); }
-
-.section { padding: 0 20px 16px; }
-.section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 10px; padding-top: 4px; }
-.property-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; padding: 0 0 6px; }
-.grouped-cards { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; }
-.tenant-row { display: flex; align-items: center; padding: 13px 16px; gap: 12px; cursor: pointer; border-bottom: 1px solid var(--border); }
-.tenant-row:last-child { border-bottom: none; }
-.tenant-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0; }
-.tenant-info { flex: 1; min-width: 0; }
-.tenant-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tenant-unit { font-size: 12px; color: var(--text2); }
-.status-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
-.badge-paid { background: var(--accent-light); color: var(--accent); }
-.badge-partial { background: var(--warning-light); color: var(--warning); }
-.badge-owed { background: var(--danger-light); color: var(--danger); }
+.section{padding:0 20px 16px;}
+.section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px;padding-top:4px;}
+.property-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.6px;padding:0 0 6px;}
+.grouped-cards{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+.tenant-row{display:flex;align-items:center;padding:13px 16px;gap:12px;cursor:pointer;border-bottom:1px solid var(--border);}
+.tenant-row:last-child{border-bottom:none;}
+.tenant-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+.tenant-info{flex:1;min-width:0;}
+.tenant-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tenant-unit{font-size:12px;color:var(--text2);}
+.badges{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+.status-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.badge-paid{background:var(--accent-light);color:var(--accent);}
+.badge-partial{background:var(--warning-light);color:var(--warning);}
+.badge-owed{background:var(--danger-light);color:var(--danger);}
+/* Due date indicator badges */
+.due-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.due-soon-badge{background:var(--due-soon-bg);color:var(--due-soon);}
+.due-today-badge{background:var(--due-today-bg);color:var(--due-today);}
+.due-overdue-badge{background:var(--overdue-bg);color:var(--overdue);}
 
 /* Detail overlay */
-#detail-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 50; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--safe-bottom) + 20px); }
-#detail-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: calc(var(--safe-top) + 14px) 20px 14px; display: flex; align-items: center; gap: 12px; }
-#detail-back { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: none; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; color: var(--text); flex-shrink: 0; }
-#detail-name { font-size: 18px; font-weight: 600; }
-#detail-meta { font-size: 12px; color: var(--text2); margin-top: 1px; }
-.detail-section { padding: 16px 20px; }
-.detail-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 12px; }
-.detail-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; border-bottom: 1px solid var(--border); }
-.detail-row:last-child { border-bottom: none; }
-.detail-row-label { font-size: 14px; color: var(--text2); }
-.detail-row-val { font-size: 14px; font-weight: 500; }
-.action-btn { width: 100%; background: var(--accent); color: white; border: none; border-radius: 14px; padding: 15px; font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+#detail-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bottom) + 20px);}
+#detail-header{background:var(--surface);border-bottom:1px solid var(--border);padding:calc(var(--safe-top) + 14px) 20px 14px;display:flex;align-items:center;gap:12px;}
+#detail-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:var(--text);flex-shrink:0;}
+#detail-name{font-size:18px;font-weight:600;}
+#detail-meta{font-size:12px;color:var(--text2);margin-top:1px;}
+.detail-section{padding:16px 20px;}
+.detail-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);}
+.detail-row:last-child{border-bottom:none;}
+.detail-row-label{font-size:14px;color:var(--text2);}
+.detail-row-val{font-size:14px;font-weight:500;}
+.action-btn{width:100%;background:var(--accent);color:white;border:none;border-radius:14px;padding:15px;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
 
-/* Payment items with inline delete */
-.payment-item { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-.payment-item:last-child { border-bottom: none; }
-.payment-item-main { display: flex; justify-content: space-between; align-items: center; }
-.payment-item-date { font-size: 13px; font-weight: 500; }
-.payment-item-note { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.payment-item-amount { font-size: 15px; font-weight: 600; color: var(--accent-mid); }
-.del-tap { background: none; border: none; font-size: 15px; cursor: pointer; color: var(--text3); padding: 4px 6px; }
-.payment-item-actions { display: none; margin-top: 10px; gap: 8px; }
-.payment-item-actions.open { display: flex; }
-.pay-del-cancel { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 9px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--text); }
-.pay-del-confirm { flex: 1; background: var(--danger); border: none; border-radius: 10px; padding: 9px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; color: white; }
+/* Payment items */
+.payment-item{padding:12px 16px;border-bottom:1px solid var(--border);}
+.payment-item:last-child{border-bottom:none;}
+.payment-item-main{display:flex;justify-content:space-between;align-items:center;}
+.payment-item-date{font-size:13px;font-weight:500;}
+.payment-item-note{font-size:12px;color:var(--text2);margin-top:2px;}
+.payment-item-amount{font-size:15px;font-weight:600;color:var(--accent-mid);}
+.del-tap{background:none;border:none;font-size:15px;cursor:pointer;color:var(--text3);padding:4px 6px;}
+.payment-item-actions{display:none;margin-top:10px;gap:8px;}
+.payment-item-actions.open{display:flex;}
+.pay-del-cancel{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);}
+.pay-del-confirm{flex:1;background:var(--danger);border:none;border-radius:10px;padding:9px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;}
 
 /* Log form */
-.form-section { padding: 16px 20px; }
-.form-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 12px; }
-.form-field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
-.form-field:last-child { border-bottom: none; }
-.form-field label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.4px; }
-.form-field input, .form-field select { font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--text); background: none; border: none; outline: none; width: 100%; padding: 2px 0; }
-.form-field select { -webkit-appearance: none; }
-.submit-btn { width: 100%; background: var(--accent); color: white; border: none; border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+.form-section{padding:16px 20px;}
+.form-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
+.form-field{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+.form-field:last-child{border-bottom:none;}
+.form-field label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;}
+.form-field input,.form-field select{font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text);background:none;border:none;outline:none;width:100%;padding:2px 0;}
+.form-field select{-webkit-appearance:none;}
+.submit-btn{width:100%;background:var(--accent);color:white;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
 
-/* Month stepper inside form */
-.month-stepper { display: flex; align-items: center; gap: 10px; padding: 6px 0 2px; }
-.ms-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; color: var(--text); flex-shrink: 0; line-height: 1; }
-.ms-display { font-size: 16px; font-weight: 500; color: var(--text); flex: 1; }
+/* Month stepper */
+.month-stepper{display:flex;align-items:center;gap:10px;padding:6px 0 2px;}
+.ms-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--text);flex-shrink:0;line-height:1;}
+.ms-display{font-size:16px;font-weight:500;color:var(--text);flex:1;}
 
-/* Tenants screen list rows with inline delete */
-.add-btn-row { padding: 14px 20px 0; }
-.add-btn { width: 100%; background: var(--surface); border: 1px dashed var(--border); border-radius: 14px; padding: 14px; font-size: 15px; color: var(--accent-mid); font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.list-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; }
-.list-row { display: flex; align-items: flex-start; padding: 13px 16px; gap: 12px; border-bottom: 1px solid var(--border); }
-.list-row:last-child { border-bottom: none; }
-.list-info { flex: 1; min-width: 0; }
-.list-name { font-size: 15px; font-weight: 500; }
-.list-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.row-del-area { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
-.row-del-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text3); padding: 0 2px; line-height: 1.4; }
-.row-del-confirm { display: none; flex-direction: column; gap: 5px; align-items: flex-end; }
-.row-del-confirm.open { display: flex; }
-.rdc-cancel { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--text); white-space: nowrap; }
-.rdc-ok { background: var(--danger); border: none; border-radius: 8px; padding: 5px 10px; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; color: white; white-space: nowrap; }
+/* Tenants screen */
+.add-btn-row{padding:14px 20px 0;}
+.add-btn{width:100%;background:var(--surface);border:1px dashed var(--border);border-radius:14px;padding:14px;font-size:15px;color:var(--accent-mid);font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.list-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+.list-row{display:flex;align-items:flex-start;padding:13px 16px;gap:12px;border-bottom:1px solid var(--border);}
+.list-row:last-child{border-bottom:none;}
+.list-info{flex:1;min-width:0;}
+.list-name{font-size:15px;font-weight:500;}
+.list-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+.row-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.row-action-btns{display:flex;gap:6px;}
+.row-edit-btn{background:var(--accent-light);border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--accent);}
+.row-del-btn{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text3);padding:0 2px;line-height:1.4;}
+.row-del-confirm{display:none;flex-direction:column;gap:5px;align-items:flex-end;}
+.row-del-confirm.open{display:flex;}
+.rdc-cancel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);white-space:nowrap;}
+.rdc-ok{background:var(--danger);border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;white-space:nowrap;}
 
 /* Modal */
-#modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: flex-end; }
-#modal-overlay.open { display: flex; }
-#modal { background: var(--surface); border-radius: 24px 24px 0 0; padding: 20px 20px calc(var(--safe-bottom) + 20px); width: 100%; max-height: 85vh; overflow-y: auto; }
-#modal h2 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 16px; }
-.modal-field { margin-bottom: 14px; }
-.modal-field label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text2); margin-bottom: 6px; }
-.modal-field input, .modal-field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: var(--text); outline: none; -webkit-appearance: none; }
-.modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-.modal-cancel { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--text); }
-.modal-save { flex: 2; background: var(--accent); border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; color: white; }
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-end;}
+#modal-overlay.open{display:flex;}
+#modal{background:var(--surface);border-radius:24px 24px 0 0;padding:20px 20px calc(var(--safe-bottom) + 20px);width:100%;max-height:90vh;overflow-y:auto;}
+#modal h2{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:16px;}
+.modal-field{margin-bottom:14px;}
+.modal-field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:var(--text2);margin-bottom:6px;}
+.modal-field input,.modal-field select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:16px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;-webkit-appearance:none;}
+.modal-actions{display:flex;gap:10px;margin-top:18px;}
+.modal-cancel{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);}
+.modal-save{flex:2;background:var(--accent);border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;}
 
 /* Data screen */
-.data-action { display: flex; align-items: center; padding: 16px; gap: 14px; cursor: pointer; border-bottom: 1px solid var(--border); }
-.data-action:last-child { border-bottom: none; }
-.data-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.data-info strong { font-size: 15px; display: block; }
-.data-info span { font-size: 12px; color: var(--text2); }
-.arrow { color: var(--text3); font-size: 20px; }
-.inline-confirm { display: none; padding: 14px 16px; background: var(--danger-light); border-top: 1px solid var(--border); }
-.inline-confirm.open { display: block; }
-.inline-confirm p { font-size: 13px; color: var(--danger); margin-bottom: 10px; font-weight: 500; }
-.inline-confirm-btns { display: flex; gap: 8px; }
-.ic-cancel { flex: 1; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--text); }
-.ic-ok { flex: 1; background: var(--danger); border: none; border-radius: 10px; padding: 10px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; color: white; }
+.data-action{display:flex;align-items:center;padding:16px;gap:14px;cursor:pointer;border-bottom:1px solid var(--border);}
+.data-action:last-child{border-bottom:none;}
+.data-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.data-info strong{font-size:15px;display:block;}
+.data-info span{font-size:12px;color:var(--text2);}
+.arrow{color:var(--text3);font-size:20px;}
+.inline-confirm{display:none;padding:14px 16px;background:var(--danger-light);border-top:1px solid var(--border);}
+.inline-confirm.open{display:block;}
+.inline-confirm p{font-size:13px;color:var(--danger);margin-bottom:10px;font-weight:500;}
+.inline-confirm-btns{display:flex;gap:8px;}
+.ic-cancel{flex:1;background:white;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);}
+.ic-ok{flex:1;background:var(--danger);border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:white;}
 
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text2); }
-.empty-icon { font-size: 40px; margin-bottom: 12px; }
-.empty-title { font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
-.empty-sub { font-size: 14px; line-height: 1.5; }
+.empty-state{text-align:center;padding:40px 20px;color:var(--text2);}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.empty-title{font-size:17px;font-weight:500;color:var(--text);margin-bottom:6px;}
+.empty-sub{font-size:14px;line-height:1.5;}
 
-#toast { position: fixed; bottom: calc(var(--safe-bottom) + 80px); left: 50%; transform: translateX(-50%) translateY(20px); background: #1A1714; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.25s; z-index: 999; white-space: nowrap; pointer-events: none; }
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast{position:fixed;bottom:calc(var(--safe-bottom) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1A1714;color:white;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:500;opacity:0;transition:all 0.25s;z-index:999;white-space:nowrap;pointer-events:none;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -221,15 +220,15 @@ html, body { height: 100%; background: var(--bg); font-family: 'DM Sans', sans-s
     <!-- Tenants & Properties -->
     <div class="screen" id="screen-tenants">
       <div class="add-btn-row" style="padding-top:16px;">
-        <button class="add-btn" onclick="openModal('property')">＋ Add Property</button>
+        <button class="add-btn" onclick="openModal('property',null)">＋ Add Property</button>
       </div>
       <div class="form-section" style="padding-top:12px;" id="tenants-list"></div>
       <div class="add-btn-row" style="padding-top:0;padding-bottom:16px;">
-        <button class="add-btn" onclick="openModal('tenant')">＋ Add Tenant</button>
+        <button class="add-btn" onclick="openModal('tenant',null)">＋ Add Tenant</button>
       </div>
     </div>
 
-    <!-- Data / Backup -->
+    <!-- Data -->
     <div class="screen" id="screen-data">
       <div class="form-section">
         <div class="section-title">Backup &amp; restore</div>
@@ -246,7 +245,6 @@ html, body { height: 100%; background: var(--bg); font-family: 'DM Sans', sans-s
           </div>
         </div>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-
         <div class="section-title">Install as iPhone app</div>
         <div class="list-card" style="margin-bottom:16px;">
           <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#FDF3E3;">📋</div><div class="data-info"><strong>Step 1</strong><span>Open this file in Safari on iPhone</span></div></div>
@@ -254,7 +252,6 @@ html, body { height: 100%; background: var(--bg); font-family: 'DM Sans', sans-s
           <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#FDF3E3;">➕</div><div class="data-info"><strong>Step 3</strong><span>Tap "Add to Home Screen" then Add</span></div></div>
           <div class="data-action" style="cursor:default;"><div class="data-icon" style="background:#EAF0E1;">✅</div><div class="data-info"><strong>Done!</strong><span>Rent Tracker appears as an app icon</span></div></div>
         </div>
-
         <div class="section-title">Danger zone</div>
         <div class="list-card">
           <div class="data-action" onclick="toggleClearConfirm()">
@@ -311,9 +308,10 @@ const MONTHS=['January','February','March','April','May','June','July','August',
 const COLORS=['#3D6B1A','#1A5A6B','#6B3D1A','#3D1A6B','#1A6B3D','#6B1A5A','#4A3D1A','#1A4A6B'];
 
 let state={tenants:[],properties:[],payments:[]};
-let currentMonth=new Date(); currentMonth.setDate(1);
-let logMonth=new Date(); logMonth.setDate(1);
-let modalMode=null, detailTenantId=null;
+const today=new Date();
+let currentMonth=new Date(today.getFullYear(),today.getMonth(),1); // #5 always opens on current month
+let logMonth=new Date(today.getFullYear(),today.getMonth(),1);     // #4 log defaults to current month
+let modalMode=null,modalEditId=null,detailTenantId=null;
 
 function getKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
 function monthStr(d){return MONTHS[d.getMonth()]+' '+d.getFullYear();}
@@ -322,6 +320,7 @@ function fmtD(n){return '$'+Math.abs(n).toLocaleString('en-CA',{minimumFractionD
 function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
 function colorFor(id){const i=state.tenants.findIndex(t=>t.id===id);return COLORS[Math.max(i,0)%COLORS.length];}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function todayStr(){return today.toISOString().split('T')[0];}
 
 function load(){try{const s=localStorage.getItem('renttracker_v3');if(s)state=JSON.parse(s);}catch(e){}}
 function save(){try{localStorage.setItem('renttracker_v3',JSON.stringify(state));}catch(e){}}
@@ -330,6 +329,41 @@ function toast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+// Due date helpers
+function lastDayOfMonth(year,month){return new Date(year,month+1,0).getDate();}
+
+// Returns actual due Date object for a tenant in a given month/year
+function getDueDate(tenant,year,month){
+  if(!tenant.dueDay)return null;
+  const last=lastDayOfMonth(year,month);
+  // If tenant set dueDay=31 (meaning "last day"), always use last day of each month
+  const day=tenant.dueDay>=29?last:Math.min(tenant.dueDay,last);
+  return new Date(year,month,day);
+}
+
+// Returns due status for current real today vs the due date in currentMonth's context
+function getDueStatus(tenant,mk){
+  if(!tenant.dueDay)return null;
+  const [yr,mo]=mk.split('-').map(Number);
+  const due=getDueDate(tenant,yr,mo-1);
+  if(!due)return null;
+  const now=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  const dueOnly=new Date(due.getFullYear(),due.getMonth(),due.getDate());
+  const diff=Math.round((dueOnly-now)/(1000*60*60*24));
+  if(diff<0)return'overdue';
+  if(diff===0)return'today';
+  if(diff<=3)return'soon';
+  return null;
+}
+
+function dueBadgeHtml(status){
+  if(!status)return'';
+  if(status==='overdue')return`<span class="due-badge due-overdue-badge">⚠ Overdue</span>`;
+  if(status==='today')return`<span class="due-badge due-today-badge">● Due today</span>`;
+  if(status==='soon')return`<span class="due-badge due-soon-badge">◷ Due soon</span>`;
+  return'';
 }
 
 function showScreen(name){
@@ -346,7 +380,17 @@ function changeMonth(dir){
   renderSummary();
 }
 
-// Log month stepper — unlimited in both directions
+// #6: allow summary tab to set log month before switching
+function goLogFromSummary(tid){
+  logMonth=new Date(currentMonth.getFullYear(),currentMonth.getMonth(),1);
+  document.getElementById('detail-screen').style.display='none';
+  showScreen('log');
+  setTimeout(()=>{
+    renderLogForm();
+    if(tid)document.getElementById('log-tenant').value=tid;
+  },60);
+}
+
 function logMonthStep(dir){
   logMonth=new Date(logMonth.getFullYear(),logMonth.getMonth()+dir,1);
   document.getElementById('log-month-display').textContent=monthStr(logMonth);
@@ -380,21 +424,25 @@ function renderSummary(){
     const rows=tenants.map(t=>{
       const paid=paidByTenant[t.id]||0;
       const isActive=!t.archivedFrom||t.archivedFrom>mk;
+      if(!isActive)return'';
       const owes=(t.rent||0)-paid;
       const color=colorFor(t.id);
-      const badge=!isActive?''
-        :paid>=(t.rent||0)?`<span class="status-badge badge-paid">Paid</span>`
-        :paid>0?`<span class="status-badge badge-partial">Partial · ${fmtD(owes)} left</span>`
-        :`<span class="status-badge badge-owed">Owes ${fmt(t.rent||0)}</span>`;
-      if(!isActive)return '';
+      const payBadge=paid>=(t.rent||0)
+        ?`<span class="status-badge badge-paid">Paid</span>`
+        :paid>0
+          ?`<span class="status-badge badge-partial">Partial · ${fmtD(owes)} left</span>`
+          :`<span class="status-badge badge-owed">Owes ${fmt(t.rent||0)}</span>`;
+      // Only show due badge if tenant hasn't paid yet this month
+      const dueStatus=paid>=(t.rent||0)?null:getDueStatus(t,mk);
+      const dBadge=dueBadgeHtml(dueStatus);
       return `<div class="tenant-row" onclick="openDetail('${t.id}')">
         <div class="tenant-avatar" style="background:${color}22;color:${color};">${initials(t.name)}</div>
         <div class="tenant-info"><div class="tenant-name">${t.name}</div><div class="tenant-unit">${t.unit||''}</div></div>
-        ${badge}
+        <div class="badges">${dBadge}${payBadge}</div>
       </div>`;
     }).join('');
-    if(!rows.trim())return '';
-    return (showLabel?`<div class="property-label">${propName}</div>`:'')
+    if(!rows.trim())return'';
+    return(showLabel?`<div class="property-label">${propName}</div>`:'')
       +`<div class="grouped-cards" style="margin-bottom:14px;">${rows}</div>`;
   }
 
@@ -404,7 +452,7 @@ function renderSummary(){
     state.tenants.forEach(t=>{const k=t.propertyId||'none';if(!grouped[k])grouped[k]=[];grouped[k].push(t);});
     state.properties.forEach(p=>{html+=renderGroup(grouped[p.id]||[],p.name,true);});
     if(grouped['none']&&grouped['none'].length)html+=renderGroup(grouped['none'],'No property',true);
-  } else {
+  }else{
     html+=renderGroup(activeTenants,'',false);
   }
   list.innerHTML=html||'<div style="color:var(--text2);font-size:14px;padding:8px 0;">No active tenants this month.</div>';
@@ -421,6 +469,11 @@ function openDetail(tid){
   const paidThisMonth=monthPay.reduce((a,p)=>a+p.amount,0);
   const owes=(t.rent||0)-paidThisMonth;
   const allPayments=state.payments.filter(p=>p.tenantId===tid).slice().reverse();
+
+  // Due date display
+  const [yr,mo]=mk.split('-').map(Number);
+  const dueDate=getDueDate(t,yr,mo-1);
+  const dueDateStr=dueDate?`${dueDate.getDate()} ${MONTHS[dueDate.getMonth()]}`:'Not set';
 
   document.getElementById('detail-avatar').style.cssText=`background:${color}22;color:${color};width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;`;
   document.getElementById('detail-avatar').textContent=initials(t.name);
@@ -452,11 +505,12 @@ function openDetail(tid){
       <div class="section-title">${monthStr(currentMonth)}</div>
       <div class="detail-card">
         ${isActive?`<div class="detail-row"><span class="detail-row-label">Monthly rent</span><span class="detail-row-val">${fmtD(t.rent||0)}</span></div>`:''}
+        ${isActive&&dueDate?`<div class="detail-row"><span class="detail-row-label">Due date</span><span class="detail-row-val">${dueDateStr}</span></div>`:''}
         <div class="detail-row"><span class="detail-row-label">Paid this month</span><span class="detail-row-val" style="color:var(--accent-mid)">${fmtD(paidThisMonth)}</span></div>
         ${isActive?`<div class="detail-row"><span class="detail-row-label">Still owed</span><span class="detail-row-val" style="color:${owes>0?'var(--danger)':'var(--accent-mid)'}">${owes>0?fmtD(owes):'Paid ✓'}</span></div>`:''}
       </div>
       ${isActive
-        ?`<button class="action-btn" onclick="closeDetail();showScreen('log');setTimeout(()=>{document.getElementById('log-tenant').value='${tid}'},80)">Log a payment for ${t.name.split(' ')[0]}</button>`
+        ?`<button class="action-btn" onclick="goLogFromSummary('${tid}')">Log a payment for ${t.name.split(' ')[0]}</button>`
         :'<div style="text-align:center;font-size:13px;color:var(--text2);margin-top:4px;">Archived — no rent expected going forward</div>'}
     </div>
     <div class="detail-section">
@@ -481,7 +535,9 @@ function renderLogForm(){
   tSel.innerHTML=active.length
     ?active.map(t=>`<option value="${t.id}">${t.name}${t.unit?' · '+t.unit:''}</option>`).join('')
     :'<option value="">No tenants — add in Tenants tab</option>';
-  document.getElementById('log-date').value=new Date().toISOString().split('T')[0];
+  // #3 always reset to today's date
+  document.getElementById('log-date').value=todayStr();
+  // #4 logMonth stays as set (defaults to current month on init)
   document.getElementById('log-month-display').textContent=monthStr(logMonth);
 }
 
@@ -503,16 +559,21 @@ function renderTenantsList(){
   const el=document.getElementById('tenants-list');
   let html='';
 
-  if(state.properties.length){
+  // Active properties only (#1 hide archived/deleted)
+  const activeProps=state.properties.filter(p=>!p.archived);
+  if(activeProps.length){
     html+='<div class="section-title">Properties</div><div class="list-card" style="margin-bottom:16px;">';
-    html+=state.properties.map(p=>`
+    html+=activeProps.map(p=>`
       <div class="list-row">
-        <div class="list-info"><div class="list-name">🏢 ${p.name}</div><div class="list-sub">${state.tenants.filter(t=>t.propertyId===p.id).length} tenant(s)</div></div>
-        <div class="row-del-area">
-          <button class="row-del-btn" onclick="toggleRowDel('prop-${p.id}')">✕</button>
+        <div class="list-info"><div class="list-name">🏢 ${p.name}</div><div class="list-sub">${state.tenants.filter(t=>t.propertyId===p.id&&!t.archivedFrom).length} active tenant(s)</div></div>
+        <div class="row-actions">
+          <div class="row-action-btns">
+            <button class="row-edit-btn" onclick="openModal('property','${p.id}')">Edit</button>
+            <button class="row-del-btn" onclick="toggleRowDel('prop-${p.id}')">✕</button>
+          </div>
           <div class="row-del-confirm" id="rdc-prop-${p.id}">
             <button class="rdc-cancel" onclick="toggleRowDel('prop-${p.id}')">Cancel</button>
-            <button class="rdc-ok" onclick="deleteProperty('${p.id}')">Remove</button>
+            <button class="rdc-ok" onclick="archiveProperty('${p.id}')">Remove</button>
           </div>
         </div>
       </div>`).join('');
@@ -527,11 +588,18 @@ function renderTenantsList(){
     html+=active.map(t=>{
       const prop=state.properties.find(p=>p.id===t.propertyId);
       const color=colorFor(t.id);
+      const dueTxt=t.dueDay?(t.dueDay>=29?'Due: last day of month':`Due: ${t.dueDay}${ordinal(t.dueDay)} of month`):'';
       return `<div class="list-row">
         <div style="background:${color}22;color:${color};width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0;">${initials(t.name)}</div>
-        <div class="list-info"><div class="list-name">${t.name}</div><div class="list-sub">${[t.unit,prop?prop.name:'',t.rent?'$'+t.rent+'/mo':''].filter(Boolean).join(' · ')}</div></div>
-        <div class="row-del-area">
-          <button class="row-del-btn" onclick="toggleRowDel('t-${t.id}')">✕</button>
+        <div class="list-info">
+          <div class="list-name">${t.name}</div>
+          <div class="list-sub">${[t.unit,prop&&!prop.archived?prop.name:'',t.rent?'$'+t.rent+'/mo':'',dueTxt].filter(Boolean).join(' · ')}</div>
+        </div>
+        <div class="row-actions">
+          <div class="row-action-btns">
+            <button class="row-edit-btn" onclick="openModal('tenant','${t.id}')">Edit</button>
+            <button class="row-del-btn" onclick="toggleRowDel('t-${t.id}')">✕</button>
+          </div>
           <div class="row-del-confirm" id="rdc-t-${t.id}">
             <div style="font-size:11px;color:var(--text2);margin-bottom:4px;text-align:right;">Archive from next month?<br>History is kept.</div>
             <button class="rdc-cancel" onclick="toggleRowDel('t-${t.id}')">Cancel</button>
@@ -543,26 +611,39 @@ function renderTenantsList(){
     html+='</div>';
   }
 
+  // #3 archived tenants — collapsed by default, tap to expand
   if(archived.length){
-    html+='<div class="section-title">Archived tenants</div><div class="list-card" style="margin-bottom:16px;">';
-    html+=archived.map(t=>`
-      <div class="list-row">
-        <div class="list-info" style="opacity:0.7;"><div class="list-name">${t.name}</div><div class="list-sub">Archived from ${t.archivedFrom}</div></div>
-        <button onclick="unarchiveTenant('${t.id}')" style="background:var(--accent-light);border:none;border-radius:8px;padding:6px 12px;font-size:12px;color:var(--accent);font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;flex-shrink:0;">Restore</button>
-      </div>`).join('');
-    html+='</div>';
+    html+=`<div style="margin-bottom:16px;">
+      <button onclick="toggleArchived()" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;cursor:pointer;padding:4px 0 8px;">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);">Archived tenants (${archived.length})</span>
+        <span id="archived-chevron" style="font-size:16px;color:var(--text3);transition:transform 0.2s;">›</span>
+      </button>
+      <div id="archived-list" style="display:none;">
+        <div class="list-card">${archived.map(t=>`
+          <div class="list-row">
+            <div class="list-info" style="opacity:0.7;"><div class="list-name">${t.name}</div><div class="list-sub">Archived from ${t.archivedFrom}</div></div>
+            <button onclick="unarchiveTenant('${t.id}')" style="background:var(--accent-light);border:none;border-radius:8px;padding:6px 12px;font-size:12px;color:var(--accent);font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;flex-shrink:0;">Restore</button>
+          </div>`).join('')}</div>
+      </div>
+    </div>`;
   }
 
-  if(!state.properties.length&&!state.tenants.length){
+  if(!activeProps.length&&!active.length&&!archived.length){
     html='<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">No tenants yet</div><div class="empty-sub">Add a property, then add your tenants.</div></div>';
   }
   el.innerHTML=html;
 }
 
+function ordinal(n){
+  const s=['th','st','nd','rd'];
+  const v=n%100;
+  return s[(v-20)%10]||s[v]||s[0];
+}
+
 function toggleRowDel(key){document.getElementById('rdc-'+key).classList.toggle('open');}
 
 function archiveTenant(id){
-  const next=new Date();next.setDate(1);next.setMonth(next.getMonth()+1);
+  const next=new Date(today.getFullYear(),today.getMonth()+1,1);
   const t=state.tenants.find(t=>t.id===id);
   if(t){t.archivedFrom=getKey(next);}
   save();renderTenantsList();renderLogForm();toast('Archived from '+monthStr(next)+'. History kept.');
@@ -572,27 +653,48 @@ function unarchiveTenant(id){
   if(t){delete t.archivedFrom;}
   save();renderTenantsList();renderLogForm();toast('Tenant restored');
 }
-function deleteProperty(id){
-  state.properties=state.properties.filter(p=>p.id!==id);
+// #1 archive property instead of deleting
+function archiveProperty(id){
+  const p=state.properties.find(p=>p.id===id);
+  if(p){p.archived=true;}
   save();renderTenantsList();toast('Property removed');
 }
 
-function openModal(mode){
+// #2 openModal handles both add and edit for tenant and property
+function openModal(mode,editId){
   modalMode=mode;
+  modalEditId=editId;
   const title=document.getElementById('modal-title');
   const body=document.getElementById('modal-body');
+
   if(mode==='property'){
-    title.textContent='Add property';
-    body.innerHTML=`<div class="modal-field"><label>Property name</label><input type="text" id="m-prop-name" placeholder="e.g. 123 Maple St"></div>`;
+    const existing=editId?state.properties.find(p=>p.id===editId):null;
+    title.textContent=existing?'Edit property':'Add property';
+    body.innerHTML=`<div class="modal-field"><label>Property name</label><input type="text" id="m-prop-name" placeholder="e.g. 123 Maple St" value="${existing?existing.name:''}"></div>`;
     setTimeout(()=>document.getElementById('m-prop-name').focus(),100);
-  } else {
-    title.textContent='Add tenant';
-    const propOpts=state.properties.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  }else{
+    const existing=editId?state.tenants.find(t=>t.id===editId):null;
+    title.textContent=existing?'Edit tenant':'Add tenant';
+    const activeProps=state.properties.filter(p=>!p.archived);
+    const propOpts=activeProps.map(p=>`<option value="${p.id}"${existing&&existing.propertyId===p.id?' selected':''}>${p.name}</option>`).join('');
+
+    // Due day stepper state — 0 means "no due date", 1-31 are days (31 = last day)
+    const initDay=existing&&existing.dueDay?existing.dueDay:0;
     body.innerHTML=`
-      <div class="modal-field"><label>Full name</label><input type="text" id="m-t-name" placeholder="Tenant name"></div>
-      <div class="modal-field"><label>Unit / Suite</label><input type="text" id="m-t-unit" placeholder="e.g. Unit 2B"></div>
-      <div class="modal-field"><label>Monthly rent ($)</label><input type="number" id="m-t-rent" placeholder="0" inputmode="numeric" min="0"></div>
-      ${state.properties.length?`<div class="modal-field"><label>Property</label><select id="m-t-prop"><option value="">— None —</option>${propOpts}</select></div>`:''}`;
+      <div class="modal-field"><label>Full name</label><input type="text" id="m-t-name" placeholder="Tenant name" value="${existing?existing.name:''}"></div>
+      <div class="modal-field"><label>Unit / Suite</label><input type="text" id="m-t-unit" placeholder="e.g. Unit 2B" value="${existing?existing.unit:''}"></div>
+      <div class="modal-field"><label>Monthly rent ($)</label><input type="number" id="m-t-rent" placeholder="0" inputmode="numeric" min="0" value="${existing&&existing.rent?existing.rent:''}"></div>
+      <div class="modal-field">
+        <label>Rent due day</label>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+          <button type="button" onclick="stepDueDay(-1)" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);font-size:18px;cursor:pointer;color:var(--text);flex-shrink:0;display:flex;align-items:center;justify-content:center;line-height:1;">&#8249;</button>
+          <div id="due-day-display" style="flex:1;font-size:16px;font-weight:500;color:var(--text);"></div>
+          <button type="button" onclick="stepDueDay(1)" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);font-size:18px;cursor:pointer;color:var(--text);flex-shrink:0;display:flex;align-items:center;justify-content:center;line-height:1;">&#8250;</button>
+        </div>
+        <input type="hidden" id="m-t-due" value="${initDay}">
+      </div>
+      ${activeProps.length?`<div class="modal-field"><label>Property</label><select id="m-t-prop"><option value="">— None —</option>${propOpts}</select></div>`:''}`;
+    updateDueDayDisplay(initDay);
     setTimeout(()=>document.getElementById('m-t-name').focus(),100);
   }
   document.getElementById('modal-overlay').classList.add('open');
@@ -604,17 +706,33 @@ function saveModal(){
   if(modalMode==='property'){
     const name=document.getElementById('m-prop-name').value.trim();
     if(!name){toast('Enter a property name.');return;}
-    state.properties.push({id:uid(),name});
-    save();closeModal();renderTenantsList();toast('Property added');
-  } else {
+    if(modalEditId){
+      // #2 edit existing property
+      const p=state.properties.find(p=>p.id===modalEditId);
+      if(p){p.name=name;}
+      save();closeModal();renderTenantsList();renderSummary();toast('Property updated');
+    }else{
+      state.properties.push({id:uid(),name});
+      save();closeModal();renderTenantsList();toast('Property added');
+    }
+  }else{
     const name=document.getElementById('m-t-name').value.trim();
     const unit=document.getElementById('m-t-unit').value.trim();
     const rent=parseFloat(document.getElementById('m-t-rent').value)||0;
+    const dueDayRaw=document.getElementById('m-t-due').value;
+    const dueDay=dueDayRaw&&parseInt(dueDayRaw)>0?parseInt(dueDayRaw):null;
     const propEl=document.getElementById('m-t-prop');
     const propId=propEl?propEl.value:'';
     if(!name){toast('Enter a tenant name.');return;}
-    state.tenants.push({id:uid(),name,unit,rent,propertyId:propId});
-    save();closeModal();renderTenantsList();renderLogForm();toast('Tenant added');
+    if(modalEditId){
+      // #2 edit existing tenant — changes apply immediately going forward
+      const t=state.tenants.find(t=>t.id===modalEditId);
+      if(t){t.name=name;t.unit=unit;t.rent=rent;t.propertyId=propId;t.dueDay=dueDay;}
+      save();closeModal();renderTenantsList();renderSummary();renderLogForm();toast('Tenant updated');
+    }else{
+      state.tenants.push({id:uid(),name,unit,rent,propertyId:propId,dueDay});
+      save();closeModal();renderTenantsList();renderLogForm();toast('Tenant added');
+    }
   }
 }
 
@@ -649,11 +767,39 @@ function clearAllData(){
   toast('All data cleared');
 }
 
+function toggleArchived(){
+  const list=document.getElementById('archived-list');
+  const chevron=document.getElementById('archived-chevron');
+  if(!list)return;
+  const open=list.style.display==='none';
+  list.style.display=open?'block':'none';
+  if(chevron)chevron.style.transform=open?'rotate(90deg)':'rotate(0deg)';
+}
+
+// Due day stepper helpers
+function updateDueDayDisplay(val){
+  const el=document.getElementById('due-day-display');
+  if(!el)return;
+  if(!val||val===0){el.textContent='No due date';el.style.color='var(--text3)';}
+  else if(val===31){el.textContent='Last day of month';el.style.color='var(--text)';}
+  else{el.textContent=val+ordinal(val)+' of the month';el.style.color='var(--text)';}
+}
+function stepDueDay(dir){
+  const input=document.getElementById('m-t-due');
+  if(!input)return;
+  let val=parseInt(input.value)||0;
+  // Cycle: 0 (none) → 1 → 2 → ... → 31 → 0
+  val+=dir;
+  if(val>31)val=0;
+  if(val<0)val=31;
+  input.value=val;
+  updateDueDayDisplay(val);
+}
+
 load();
 renderSummary();
 renderLogForm();
 renderTenantsList();
-document.getElementById('month-display').textContent=monthStr(currentMonth);
 </script>
 </body>
 </html>
