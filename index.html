@@ -745,12 +745,31 @@ function initGoogleAuth(){
     error_callback: handleAuthError,
   });
 
-  // If we have a previous session, attempt a silent token request automatically.
-  // With prompt:'', Google skips the account chooser if the user already
-  // authorised this app — so the app reopens without any sign-in screen.
   if (userEmail) {
+    // Returning user — use One Tap's silent auto-select to identify the user
+    // with zero UI, then grab the access token in the background.
     showLoadingScreen('Signing you in…');
-    tokenClient.requestAccessToken({ prompt: '' });
+
+    google.accounts.id.initialize({
+      client_id:   GOOGLE_CLIENT_ID,
+      auto_select: true,   // silently selects the account with no UI shown
+      callback:    () => {
+        // One Tap confirmed the user invisibly — now get the Sheets access token.
+        // login_hint skips the account picker; prompt:'' skips the consent screen
+        // (already granted). Combined, the popup is never visible to the user.
+        tokenClient.requestAccessToken({ prompt: '', login_hint: userEmail });
+      },
+    });
+
+    google.accounts.id.prompt((notification) => {
+      // One Tap couldn't auto-select (e.g. multiple accounts, session expired,
+      // or the browser blocked it). Fall back to the token popup with a hint
+      // so at least the account picker step is skipped.
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()){
+        tokenClient.requestAccessToken({ prompt: '', login_hint: userEmail });
+      }
+    });
+
   } else {
     showLoginScreen();
   }
