@@ -745,7 +745,15 @@ function initGoogleAuth(){
     error_callback: handleAuthError,
   });
 
-  showLoginScreen();
+  // If we have a previous session, attempt a silent token request automatically.
+  // With prompt:'', Google skips the account chooser if the user already
+  // authorised this app — so the app reopens without any sign-in screen.
+  if (userEmail) {
+    showLoadingScreen('Signing you in…');
+    tokenClient.requestAccessToken({ prompt: '' });
+  } else {
+    showLoginScreen();
+  }
 }
 
 function handleGsiLoadError(){
@@ -831,10 +839,15 @@ function handleAuthError(error){
   const type = (error && error.type) || '';
   if (type === 'popup_failed_to_open'){
     toast('Popup blocked — please allow popups for this site and try again.');
-  } else if (type !== 'popup_closed'){
-    toast('Sign-in failed. Please try again.');
+    showLoginScreen();
+  } else if (type === 'popup_closed'){
+    // User closed the popup manually — just show login screen quietly
+    showLoginScreen();
+  } else {
+    // Silent sign-in failed (session expired, revoked, etc.)
+    // Fall back to login screen without a scary error message
+    showLoginScreen();
   }
-  showLoginScreen();
 }
 
 async function fetchUserInfo(){
